@@ -6,6 +6,8 @@
 *.ko
 *.obj
 *.elf
+*.axf
+*.lst
 
 # Linker output
 *.ilk
@@ -53,3 +55,47 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# MCUXpresso workspace files
+.settings/
+.launches/
+*.launch
+
+# SDK drivers and middleware
+drivers/
+device/
+CMSIS/
+component/
+utilities/
+xip/
+board/
+
+# MCUXpresso project files
+startup/
+utilities/
+Debug/
+doc/
+*.cproject
+*.project
+.mcuxpressoide_packages_suport_*
+
+# MCUXpresso build artefacts
+*.ninja
+*.ninja_deps
+*.ninja_log
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+
+# Linker files
+*.ld
+
+# Flash driver files
+*.cfx
+
+# Memory configuration
+*.mex
+
+# OS files
+Thumbs.db
+.DS_Store
