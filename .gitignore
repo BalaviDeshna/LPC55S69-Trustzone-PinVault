@@ -65,11 +65,19 @@ dkms.conf
 # --------------
 
 # Workspace and project files
-*.cproject
-*.project
 *.launch
-.settings/
 .launches/
+**/.cproject
+**/.project
+**/.settings/
+
+# RTOS log files
+AzureRTOS_TAD_logs/
+FreeRTOS_TAD_logs/
+ZephyrRTOS_TAD_logs/
+
+# XML debug files
+**/Debug/*.xml
 
 # SDK package tracking
 .mcuxpressoide_packages_support_*
@@ -99,15 +107,15 @@ cmake_install.cmake
 # NXP SDK (download from nxp.com)
 # -------------------------------
 
-drivers/
-device/
-CMSIS/
-component/
-utilities/
-xip/
-board/
-startup/
-doc/
+**/Debug/
+**/drivers/
+**/device/
+**/CMSIS/
+**/component/
+**/utilities/
+**/startup/
+**/board/
+**/doc/
 
 # ------------------
 # OS Generated Files
