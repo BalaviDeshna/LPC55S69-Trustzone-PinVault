@@ -1,1 +1,131 @@
-/.metadata/
+# ----------------------------
+# C / Embedded Build Artefacts
+# ----------------------------
+
+# Prerequisites
+*.d
+
+# Object files
+*.o
+*.ko
+*.obj
+
+# Compiled binaries
+*.elf
+*.axf
+*.hex
+*.out
+*.app
+
+# Linker output
+*.ilk
+*.map
+*.exp
+*.lst
+
+# Precompiled headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects / DLLs
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.i*86
+*.x86_64
+
+# Debug / symbol files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+*.dwo
+
+# XML debug files
+**/Debug/*.xml
+
+# Kernel module compile results
+*.mod*
+*.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
+
+# --------------
+# MCUXpresso IDE
+# --------------
+
+# Workspace and project files
+**/.cproject
+**/.project
+**/.settings/
+*.launch
+.launches/
+
+# RTOS log files
+AzureRTOS_TAD_logs/
+FreeRTOS_TAD_logs/
+ZephyrRTOS_TAD_logs/
+
+# SDK package tracking
+.mcuxpressoide_packages_support_*
+.mcuxpressoide_packages_support/
+
+# Build output folders
+Debug/
+Release/
+
+# CMake build system
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+*.ninja
+*.ninja_deps
+*.ninja_log
+
+# Linker scripts
+*.ld
+
+# Flash driver files
+*.cfx
+
+# MCUXpresso config tools
+*.mex
+
+# -------------------------------
+# NXP SDK (download from nxp.com)
+# -------------------------------
+
+**/Debug/
+**/drivers/
+**/device/
+**/CMSIS/
+**/component/
+**/utilities/
+**/startup/
+**/board/
+**/doc/
+
+# -------------------
+# OS Generated Files
+# -------------------
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
