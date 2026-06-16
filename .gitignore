@@ -1,3 +1,7 @@
+# -----------------------------
+# C / Embedded Build Artefacts
+# -----------------------------
+
 # Prerequisites
 *.d
 
@@ -5,16 +9,21 @@
 *.o
 *.ko
 *.obj
+
+# Compiled binaries
 *.elf
 *.axf
-*.lst
+*.hex
+*.out
+*.app
 
 # Linker output
 *.ilk
 *.map
 *.exp
+*.lst
 
-# Precompiled Headers
+# Precompiled headers
 *.gch
 *.pch
 
@@ -24,7 +33,7 @@
 *.la
 *.lo
 
-# Shared objects (inc. Windows DLLs)
+# Shared objects / DLLs
 *.dll
 *.so
 *.so.*
@@ -32,19 +41,17 @@
 
 # Executables
 *.exe
-*.out
-*.app
 *.i*86
 *.x86_64
-*.hex
 
-# Debug files
+# Debug / symbol files
 *.dSYM/
 *.su
 *.idb
 *.pdb
+*.dwo
 
-# Kernel Module Compile Results
+# Kernel module compile results
 *.mod*
 *.cmd
 .tmp_versions/
@@ -53,15 +60,45 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-# debug information files
-*.dwo
+# --------------
+# MCUXpresso IDE
+# --------------
 
-# MCUXpresso workspace files
+# Workspace and project files
+*.cproject
+*.project
+*.launch
 .settings/
 .launches/
-*.launch
 
-# SDK drivers and middleware
+# SDK package tracking
+.mcuxpressoide_packages_support_*
+
+# Build output folders
+Debug/
+Release/
+
+# CMake build system
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+*.ninja
+*.ninja_deps
+*.ninja_log
+
+# Linker scripts
+*.ld
+
+# Flash driver files
+*.cfx
+
+# MCUXpresso config tools
+*.mex
+
+# -------------------------------
+# NXP SDK (download from nxp.com)
+# -------------------------------
+
 drivers/
 device/
 CMSIS/
@@ -69,33 +106,18 @@ component/
 utilities/
 xip/
 board/
-
-# MCUXpresso project files
 startup/
-utilities/
-Debug/
 doc/
-*.cproject
-*.project
-.mcuxpressoide_packages_suport_*
 
-# MCUXpresso build artefacts
-*.ninja
-*.ninja_deps
-*.ninja_log
-CMakeFiles/
-CMakeCache.txt
-cmake_install.cmake
+# ------------------
+# OS Generated Files
+# ------------------
 
-# Linker files
-*.ld
-
-# Flash driver files
-*.cfx
-
-# Memory configuration
-*.mex
-
-# OS files
+# Windows
 Thumbs.db
+Desktop.ini
+
+# macOS
 .DS_Store
+.AppleDouble
+.LSOverride
