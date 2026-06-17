@@ -52,24 +52,28 @@ int main(void) {
 		PRINTF_NSE("ENTER THE PIN: ");
 		i = 0;
 
+		/*
+		 * accepting input
+		 */
 		while (i < MAX_PIN_LENGTH) {
 			ch = DbgConsole_Getchar_NSE();
-			if (ch == '\r' || ch == '\n')
-				break;
-
+			if (ch == '\r' || ch == '\n') break;
 			entered_pin[i] = (char) ch;
 			DbgConsole_Putchar_NSE(ch);
 
 			i++;
 		}
-
 		DbgConsole_Putchar_NSE('\r');
 		DbgConsole_Putchar_NSE('\n');
 		entered_pin[i] = '\0';
 
 		all_leds_off();
 
+		/*
+		 * result handling block
+		 */
 		result = verify_pin(entered_pin); // 1: success, 0: failure, -1: lockout
+		// correct pin
 		if (result == 1) {
 			PRINTF_NSE("access granted\r\n");
 			LED_ON(GREEN_PIN);
@@ -79,7 +83,9 @@ int main(void) {
 			all_leds_off();
 			count = 0;
 			break;
-		} else if (result == 0) {
+		}
+		// wrong pin
+		else if (result == 0) {
 			PRINTF_NSE("WRONG PIN.\r\n");
 			LED_ON(RED_PIN);
 			volatile int delay = 5500000;
@@ -89,6 +95,12 @@ int main(void) {
 			count++;
 
 		}
+
+		/*
+		 * audit log information
+		 */
+
+		// lockout
 		if (count == 3) {
 			PRINTF_NSE("TOO MANY INCORRECT ATTEMPTS. LOCKED OUT.\r\n");
 			while (1) {
@@ -104,9 +116,6 @@ int main(void) {
 					;
 			}
 		}
-	}
-	while (1) {
-		// wait here after success
 	}
 }
 

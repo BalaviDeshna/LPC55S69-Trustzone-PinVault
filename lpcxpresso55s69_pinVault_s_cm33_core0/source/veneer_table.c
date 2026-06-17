@@ -134,5 +134,9 @@ TZM_IS_NOSECURE_ENTRY int get_log_event_NSE(int index){
 
 TZM_IS_NOSECURE_ENTRY int get_log_attempt_NSE(int index){
 	if(index < 0 || index > MAX_LOG_ENTRIES) return -999;
-	return audit_log[index % MAX_LOG_ENTRIES].attempt;
+	return audit_log[index % MAX_LOG_ENTRIES].attempt_number;
+}
+
+TZM_IS_NOSECURE_ENTRY void print_int_NSE(int value){
+	PRINTF("%d", value);
 }

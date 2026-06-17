@@ -26,11 +26,12 @@ typedef int (*callbackptr)(char const *s1, char const *s2);
 void DbgConsole_Printf_NSE(char const *s);
 
 /*
- * interface between secure and normal world for GETCHAR and PUTCHAR functions
+ * interface between secure and normal world for functions that print in debug console
  * called from normal world only
  */
 char DbgConsole_Getchar_NSE(void);
 void DbgConsole_Putchar_NSE(char ch);
+void print_int_NSE(int value);
 
 /*
  * function to verify the pin input from the NS world
