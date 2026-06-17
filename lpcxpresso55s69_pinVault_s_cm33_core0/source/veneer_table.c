@@ -122,3 +122,17 @@ TZM_IS_NOSECURE_ENTRY void GPIO_PortClear_NSE(uint8_t pin_number){
 TZM_IS_NOSECURE_ENTRY void GPIO_PortSet_NSE(uint8_t pin_number){
 	GPIO_PortSet(GPIO, 1u, 1u << pin_number);
 }
+
+TZM_IS_NOSECURE_ENTRY int get_log_count_NSE(void){
+	return log_count;
+}
+
+TZM_IS_NOSECURE_ENTRY int get_log_event_NSE(int index){
+	if(index < 0 || index > MAX_LOG_ENTRIES) return -999;
+	return audit_log[index % MAX_LOG_ENTRIES].event;
+}
+
+TZM_IS_NOSECURE_ENTRY int get_log_attempt_NSE(int index){
+	if(index < 0 || index > MAX_LOG_ENTRIES) return -999;
+	return audit_log[index % MAX_LOG_ENTRIES].attempt;
+}

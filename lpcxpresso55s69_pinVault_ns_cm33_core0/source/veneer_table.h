@@ -32,7 +32,26 @@ void DbgConsole_Printf_NSE(char const *s);
 char DbgConsole_Getchar_NSE(void);
 void DbgConsole_Putchar_NSE(char ch);
 
+/*
+ * function to verify the pin input from the NS world
+ * input: (string) entered pin
+ * output: 1 on success, 0 on failure, -1 on lockout(in case of 3 consecutive failures)
+ */
 int verify_pin(const char* entered_pin);
+
+/*
+ * functions to show LED output from the NS world
+ * input: pin number
+ * output: GPIO port gets cleared/set
+ */
 void GPIO_PortClear_NSE(uint8_t pin_number);
 void GPIO_PortSet_NSE(uint8_t pin_number);
+
+/*
+ * read only functions to get information from the audit log
+ */
+int get_log_count_NSE(void);
+int get_log_event_NSE(int index);
+int get_log_attempt_NSE(int index);
+
 #endif /* _VENEER_TABLE_H_ */
