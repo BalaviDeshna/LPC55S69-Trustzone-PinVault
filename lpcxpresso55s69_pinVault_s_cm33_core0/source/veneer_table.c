@@ -20,7 +20,15 @@
  * Definitions
  ******************************************************************************/
 #define MAX_STRING_LENGTH 0x400
+#define MAX_LOG_ENTRIES 20
 
+typedef struct {
+	int event; // 1, 0, -1
+	int attempt_number;
+}Audit_Entry;
+
+static Audit_Entry audit_log[MAX_LOG_ENTRIES];
+static int log_count = 0;
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
@@ -81,24 +89,30 @@ TZM_IS_NOSECURE_ENTRY void DbgConsole_Putchar_NSE(char ch){
 TZM_IS_NOSECURE_ENTRY int verify_pin(const char* entered_pin){
 	static const char secure_pin[] = "0987";
 	static int attempt_counter = 0;
+	int result;
 
 	// locks out on 3 failures
 	if (attempt_counter >= 3){
-//		GPIO_PortClear(GPIO, 1u, 1u << 6u);
-		return -1;
+		result = -1;
 	}
 
 	// success on pin match
 	if (strcmp(entered_pin, secure_pin) == 0){
 		attempt_counter = 0;
-//		GPIO_PortClear(GPIO, 1u, 1u << 7u);
-		return 1;
+		result = 1;
 	}
 
 	// failure on all other cases
-	attempt_counter++;
-//	GPIO_PortClear(GPIO, 1u, 1u << 4u);
-	return 0;
+	else{
+		attempt_counter++;
+		result = 0;
+	}
+
+	// logging the attempt
+	audit_log[log_count % MAX_LOG_ENTRIES].event = result;
+	audit_log[log_count % MAX_LOG_ENTRIES].attempt_number = attempt_counter;
+	log_count++;
+	return result;
 }
 
 TZM_IS_NOSECURE_ENTRY void GPIO_PortClear_NSE(uint8_t pin_number){
