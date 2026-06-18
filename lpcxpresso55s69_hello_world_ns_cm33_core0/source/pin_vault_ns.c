@@ -99,6 +99,20 @@ int main(void) {
 		/*
 		 * audit log information
 		 */
+		{
+			int j;
+			int total = get_log_count_NSE();
+			PRINTF_NSE("-----------\r\nAUDIT LOG START\r\n-----------\r\n");
+			for(j = 0; j<total && j<20; j++){
+				int ev = get_log_event_NSE(i);
+				int at = get_log_attempt_NSE(i);
+				if (ev == 1) PRINTF_NSE("GRANTED\r\n");
+				else if(ev == 0) PRINTF_NSE("DENIED\r\n");
+				else if(ev == -1) PRINTF_NSE("LOCKDOWN\r\n");
+				else PRINTF_NSE("UNKNOWN");
+			}
+			PRINTF_NSE("-----------\r\nAUDIT LOG END\r\n-----------\r\n");
+		}
 
 		// lockout
 		if (count == 3) {

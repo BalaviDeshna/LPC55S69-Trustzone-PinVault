@@ -97,7 +97,7 @@ TZM_IS_NOSECURE_ENTRY int verify_pin(const char* entered_pin){
 	}
 
 	// success on pin match
-	if (strcmp(entered_pin, secure_pin) == 0){
+	else if (strcmp(entered_pin, secure_pin) == 0){
 		attempt_counter = 0;
 		result = 1;
 	}
@@ -128,12 +128,12 @@ TZM_IS_NOSECURE_ENTRY int get_log_count_NSE(void){
 }
 
 TZM_IS_NOSECURE_ENTRY int get_log_event_NSE(int index){
-	if(index < 0 || index > MAX_LOG_ENTRIES) return -999;
+	if(index < 0 || index >= MAX_LOG_ENTRIES) return -999;
 	return audit_log[index % MAX_LOG_ENTRIES].event;
 }
 
 TZM_IS_NOSECURE_ENTRY int get_log_attempt_NSE(int index){
-	if(index < 0 || index > MAX_LOG_ENTRIES) return -999;
+	if(index < 0 || index >= MAX_LOG_ENTRIES) return -999;
 	return audit_log[index % MAX_LOG_ENTRIES].attempt_number;
 }
 
