@@ -54,4 +54,9 @@ int get_log_count_NSE(void);
 int get_log_event_NSE(int index);
 int get_log_attempt_NSE(int index);
 
+/*
+ * very basic verification
+ */
+int verify_firmware_NSE(const uint8_t *image, uint32_t image_length, const uint8_t *signature, uint32_t signature_length, uint32_t version);
+
 #endif /* _VENEER_TABLE_H_ */

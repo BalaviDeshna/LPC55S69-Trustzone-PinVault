@@ -22,6 +22,14 @@
 #define MAX_STRING_LENGTH 0x400
 #define MAX_LOG_ENTRIES 20
 
+// . hard-coded key for verification
+static const uint8_t firmware_key[] = {
+    0x2B, 0x7E, 0x15, 0x16, 0x28, 0xAE, 0xD2, 0xA6,
+    0xAB, 0xF7, 0x15, 0x88, 0x09, 0xCF, 0x4F, 0x3C
+};
+#define FIRMWARE_KEY_LENGTH 16
+static uint32_t current_firmware_version = 1;
+
 typedef struct {
 	int event; // 1, 0, -1
 	int attempt_number;
@@ -139,4 +147,57 @@ TZM_IS_NOSECURE_ENTRY int get_log_attempt_NSE(int index){
 
 TZM_IS_NOSECURE_ENTRY void print_int_NSE(int value){
 	PRINTF("%d", value);
+}
+
+TZM_IS_NOSECURE_ENTRY int verify_firmware_NSE(const uint8_t *image, uint32_t image_length, const uint8_t *signature, uint32_t signature_length, uint32_t version){
+	uint32_t i;
+	if(cmse_check_address_range((void*)image, image_length, CMSE_NONSECURE | CMSE_MPU_READ) == NULL){
+		PRINTF("INVALID IMAGE POINTER.\r\n");
+		return -1;
+	}
+	if(cmse_check_address_range((void*)signature, signature_length, CMSE_NONSECURE | CMSE_MPU_READ) == NULL){
+		PRINTF("INVALID SIGNATURE POINTER.\r\n");
+		return -1;
+	}
+	if (version < current_firmware_version){
+		PRINTF("FIRMWARE VERSION TOO OLD.\r\n");
+		return -2;
+	}
+
+	/*
+	 * . security flaws so far, to be improved:
+	 * 1. if the nth bit and the (image_length+n)th bit are swapped, it will still result in the same value
+	 * 2. if image_length < FIRMWARE_KEY_LENGTH, then the rest of the firmware won't be evaluated, posing risks
+	 */
+	uint8_t expected_signature[FIRMWARE_KEY_LENGTH] = {0};
+	for(i = 0; i < image_length; i++){
+		expected_signature[i % FIRMWARE_KEY_LENGTH] ^= image[i] ^ firmware_key[i % FIRMWARE_KEY_LENGTH];
+	}
+
+	/*
+	 * . security flaws so far, to be improved:
+	 * 1. if signature_length < FIRMWARE_KEY_LENGTH, match will never become 0
+	 * if signature_length > FIRMWARE_KEY_LENGTH, trailing data ignored => issue
+	 * 2. due to the break, timing related attacks possible
+	 *
+	 */
+	int match = 1;
+	for(i = 0; i < FIRMWARE_KEY_LENGTH; i++){
+		if(i < signature_length && expected_signature[i] != signature[i]){
+			match = 0;
+			break;
+		}
+	}
+	if(!match){
+		PRINTF("THE SIGNATURE DOESN'T MATCH\r\n");
+		return -3;
+	}
+
+	/*
+	 * . anti-rollback protection resets every time the chip power-cycles or resets,
+	 *   since current_firmware_version is just a global variable atp
+	 */
+	current_firmware_version = version;
+	PRINTF("firmware verified, updated to version %d\r\n", version);
+	return 1;
 }
