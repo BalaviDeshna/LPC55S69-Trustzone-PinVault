@@ -111,7 +111,7 @@ int main(void) {
 				else if(ev == -1) PRINTF_NSE("LOCKDOWN\r\n");
 				else PRINTF_NSE("UNKNOWN");
 			}
-			PRINTF_NSE("-----------\r\nAUDIT LOG END\r\n-----------\r\n");
+			PRINTF_NSE("----------------------\r\n");
 		}
 
 		// lockout
@@ -130,6 +130,55 @@ int main(void) {
 					;
 			}
 		}
+
+	}
+	{
+		uint8_t valid_image[] = {0x01, 0x02, 0x03, 0x04, 0x05};
+		uint8_t tampered_image[] = {0xff, 0x02, 0x03, 0x04, 0x05};
+		uint8_t valid_signature[] = {0x2a, 0x7c, 0x16, 0x12, 0x2d};
+		uint8_t wrong_signature[16] = {0x00};
+
+		firmware_buffer valid_image_info;
+		firmware_buffer tampered_image_info;
+		firmware_buffer valid_signature_info;
+		firmware_buffer wrong_signature_info;
+
+		valid_image_info.array = valid_image;
+		tampered_image_info.array = tampered_image;
+		valid_signature_info.array = valid_signature;
+		wrong_signature_info.array = wrong_signature;
+
+		valid_image_info.array_length = sizeof(valid_image);
+		tampered_image_info.array_length = sizeof(tampered_image);
+		valid_signature_info.array_length = sizeof(valid_signature);
+		wrong_signature_info.array_length = sizeof(wrong_signature);
+
+		int fw;
+
+		PRINTF_NSE("-----------\r\nFIRMWARE VERIFICATION DEMO\r\n-----------\r\n");
+
+		// test1: verify that the valid image matches with the signature
+		fw = verify_firmware_NSE(&valid_image_info, &valid_signature_info, 2);
+		PRINTF_NSE(fw == 1? "test1 passed, valid fw accepted\r\n": "test1 failed\r\n");
+		PRINTF_NSE("\r\n");
+
+		// test2: verify that the tampered image doesn't match with the signature
+		fw = verify_firmware_NSE(&tampered_image_info, &valid_signature_info, 3);
+		PRINTF_NSE(fw == -3? "test2 passed, tampered fw rejected\r\n": "test2 failed\r\n");
+		PRINTF_NSE("\r\n");
+
+		// test3: verify that downgrade version doesn't work
+		fw = verify_firmware_NSE(&valid_image_info, &valid_signature_info, 1);
+		PRINTF_NSE(fw == -2? "test3 passed, downgrade rejected\r\n": "test3 failed\r\n");
+		PRINTF_NSE("\r\n");
+
+		// test4: verify that wrong signature is rejected
+		fw = verify_firmware_NSE(&valid_image_info, &wrong_signature_info, 4);
+		PRINTF_NSE(fw == -3? "test4 passed, wrong signature rejected\r\n": "test4 failed\r\n");
+		PRINTF_NSE("\r\n");
+
+		PRINTF_NSE("----------------------\r\n");
+
 	}
 }
 

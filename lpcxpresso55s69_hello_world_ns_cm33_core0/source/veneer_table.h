@@ -9,7 +9,10 @@
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
-
+typedef struct {
+	const uint8_t *array;
+	uint32_t array_length;
+}firmware_buffer;
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
@@ -57,6 +60,6 @@ int get_log_attempt_NSE(int index);
 /*
  * very basic verification
  */
-int verify_firmware_NSE(const uint8_t *image, uint32_t image_length, const uint8_t *signature, uint32_t signature_length, uint32_t version);
+int verify_firmware_NSE(const firmware_buffer *image_info, const firmware_buffer *signature_info, uint32_t version);
 
 #endif /* _VENEER_TABLE_H_ */

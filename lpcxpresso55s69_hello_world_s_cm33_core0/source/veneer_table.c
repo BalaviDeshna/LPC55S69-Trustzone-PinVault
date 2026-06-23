@@ -149,13 +149,22 @@ TZM_IS_NOSECURE_ENTRY void print_int_NSE(int value){
 	PRINTF("%d", value);
 }
 
-TZM_IS_NOSECURE_ENTRY int verify_firmware_NSE(const uint8_t *image, uint32_t image_length, const uint8_t *signature, uint32_t signature_length, uint32_t version){
+TZM_IS_NOSECURE_ENTRY int verify_firmware_NSE(const firmware_buffer *image_info, const firmware_buffer *signature_info, uint32_t version){
 	uint32_t i;
-	if(cmse_check_address_range((void*)image, image_length, CMSE_NONSECURE | CMSE_MPU_READ) == NULL){
+
+	if(cmse_check_address_range((void*)image_info, sizeof(firmware_buffer), CMSE_NONSECURE | CMSE_MPU_READ) == NULL){
+		PRINTF("INVALID IMAGE STRUCTURE POINTER");
+		return -1;
+	}
+	if(cmse_check_address_range((void*)signature_info, sizeof(firmware_buffer), CMSE_NONSECURE | CMSE_MPU_READ) == NULL){
+		PRINTF("INVALID SIGNATURE STRUCTURE POINTER");
+		return -1;
+	}
+	if(cmse_check_address_range((void*)image_info->array, image_info->array_length, CMSE_NONSECURE | CMSE_MPU_READ) == NULL){
 		PRINTF("INVALID IMAGE POINTER.\r\n");
 		return -1;
 	}
-	if(cmse_check_address_range((void*)signature, signature_length, CMSE_NONSECURE | CMSE_MPU_READ) == NULL){
+	if(cmse_check_address_range((void*)signature_info->array, signature_info->array_length, CMSE_NONSECURE | CMSE_MPU_READ) == NULL){
 		PRINTF("INVALID SIGNATURE POINTER.\r\n");
 		return -1;
 	}
@@ -170,8 +179,8 @@ TZM_IS_NOSECURE_ENTRY int verify_firmware_NSE(const uint8_t *image, uint32_t ima
 	 * 2. if image_length < FIRMWARE_KEY_LENGTH, then the rest of the firmware won't be evaluated, posing risks
 	 */
 	uint8_t expected_signature[FIRMWARE_KEY_LENGTH] = {0};
-	for(i = 0; i < image_length; i++){
-		expected_signature[i % FIRMWARE_KEY_LENGTH] ^= image[i] ^ firmware_key[i % FIRMWARE_KEY_LENGTH];
+	for(i = 0; i < image_info->array_length; i++){
+		expected_signature[i % FIRMWARE_KEY_LENGTH] ^= image_info->array[i] ^ firmware_key[i % FIRMWARE_KEY_LENGTH];
 	}
 
 	/*
@@ -183,7 +192,7 @@ TZM_IS_NOSECURE_ENTRY int verify_firmware_NSE(const uint8_t *image, uint32_t ima
 	 */
 	int match = 1;
 	for(i = 0; i < FIRMWARE_KEY_LENGTH; i++){
-		if(i < signature_length && expected_signature[i] != signature[i]){
+		if(i < signature_info->array_length && expected_signature[i] != signature_info->array[i]){
 			match = 0;
 			break;
 		}
