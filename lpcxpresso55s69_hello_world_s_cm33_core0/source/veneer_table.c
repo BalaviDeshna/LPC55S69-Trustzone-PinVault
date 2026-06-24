@@ -28,7 +28,7 @@ static const uint8_t firmware_key[] = {
     0xAB, 0xF7, 0x15, 0x88, 0x09, 0xCF, 0x4F, 0x3C
 };
 #define FIRMWARE_KEY_LENGTH 16
-static uint32_t current_firmware_version = 1;
+static uint32_t current_firmware_version = 2;
 
 typedef struct {
 	int event; // 1, 0, -1
@@ -199,6 +199,9 @@ TZM_IS_NOSECURE_ENTRY int verify_firmware_NSE(const firmware_buffer *image_info,
 	}
 	if(!match){
 		PRINTF("THE SIGNATURE DOESN'T MATCH\r\n");
+		audit_log[log_count % MAX_LOG_ENTRIES].event = -2;
+		audit_log[log_count % MAX_LOG_ENTRIES].attempt_number = version;
+		log_count++;
 		return -3;
 	}
 
@@ -208,5 +211,8 @@ TZM_IS_NOSECURE_ENTRY int verify_firmware_NSE(const firmware_buffer *image_info,
 	 */
 	current_firmware_version = version;
 	PRINTF("firmware verified, updated to version %d\r\n", version);
+	audit_log[log_count % MAX_LOG_ENTRIES].event = 2;
+	audit_log[log_count % MAX_LOG_ENTRIES].attempt_number = version;
+	log_count++;
 	return 1;
 }

@@ -99,20 +99,22 @@ int main(void) {
 		/*
 		 * audit log information
 		 */
-		{
-			int j;
-			int total = get_log_count_NSE();
-			PRINTF_NSE("-----------\r\nAUDIT LOG START\r\n-----------\r\n");
-			for(j = 0; j<total && j<20; j++){
-				int ev = get_log_event_NSE(i);
-				int at = get_log_attempt_NSE(i);
-				if (ev == 1) PRINTF_NSE("GRANTED\r\n");
-				else if(ev == 0) PRINTF_NSE("DENIED\r\n");
-				else if(ev == -1) PRINTF_NSE("LOCKDOWN\r\n");
-				else PRINTF_NSE("UNKNOWN");
-			}
-			PRINTF_NSE("----------------------\r\n");
-		}
+//		{
+//			int j;
+//			int total = get_log_count_NSE();
+//			PRINTF_NSE("-----------\r\nAUDIT LOG START\r\n-----------\r\n");
+//			for(j = 0; j<total && j<20; j++){
+//				int ev = get_log_event_NSE(j);
+//				int at = get_log_attempt_NSE(j);
+//				if (ev == 1) PRINTF_NSE("GRANTED\r\n");
+//				else if(ev == 0) PRINTF_NSE("DENIED\r\n");
+//				else if(ev == -1) PRINTF_NSE("LOCKDOWN\r\n");
+//				else if(ev == 2) PRINTF_NSE("FIRMWARE ACCEPTED\r\n");
+//				else if(ev == -2) PRINTF_NSE("FIRMWARE REJECTED\r\n");
+//				else PRINTF_NSE("UNKNOWN");
+//			}
+//			PRINTF_NSE("----------------------\r\n");
+//		}
 
 		// lockout
 		if (count == 3) {
@@ -132,6 +134,22 @@ int main(void) {
 		}
 
 	}
+//	{
+//				int j;
+//				int total = get_log_count_NSE();
+//				PRINTF_NSE("-----------\r\nAUDIT LOG START\r\n-----------\r\n");
+//				for(j = 0; j<total && j<20; j++){
+//					int ev = get_log_event_NSE(j);
+//					int at = get_log_attempt_NSE(j);
+//					if (ev == 1) PRINTF_NSE("GRANTED\r\n");
+//					else if(ev == 0) PRINTF_NSE("DENIED\r\n");
+//					else if(ev == -1) PRINTF_NSE("LOCKDOWN\r\n");
+//					else if(ev == 2) PRINTF_NSE("FIRMWARE ACCEPTED\r\n");
+//					else if(ev == -2) PRINTF_NSE("FIRMWARE REJECTED\r\n");
+//					else PRINTF_NSE("UNKNOWN");
+//				}
+//				PRINTF_NSE("----------------------\r\n");
+//			}
 	{
 		uint8_t valid_image[] = {0x01, 0x02, 0x03, 0x04, 0x05};
 		uint8_t tampered_image[] = {0xff, 0x02, 0x03, 0x04, 0x05};
@@ -179,6 +197,22 @@ int main(void) {
 
 		PRINTF_NSE("----------------------\r\n");
 
+	}
+	{
+		int j;
+		int total = get_log_count_NSE();
+		PRINTF_NSE("-----------\r\nAUDIT LOG START\r\n-----------\r\n");
+		for(j = 0; j<total && j<20; j++){
+			int ev = get_log_event_NSE(j);
+			int at = get_log_attempt_NSE(j);
+			if (ev == 1) PRINTF_NSE("GRANTED\r\n");
+			else if(ev == 0) PRINTF_NSE("DENIED\r\n");
+			else if(ev == -1) PRINTF_NSE("LOCKDOWN\r\n");
+			else if(ev == 2) PRINTF_NSE("FIRMWARE ACCEPTED\r\n");
+			else if(ev == -2) PRINTF_NSE("FIRMWARE REJECTED\r\n");
+			else PRINTF_NSE("UNKNOWN");
+		}
+		PRINTF_NSE("----------------------\r\n");
 	}
 }
 
