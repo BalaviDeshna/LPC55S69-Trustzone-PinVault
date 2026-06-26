@@ -67,9 +67,7 @@ dkms.conf
 # MCUXpresso IDE
 # --------------
 
-# Workspace and project files
-**/.cproject
-**/.project
+# Workspace-instance-specific files
 **/.settings/
 *.launch
 .launches/
@@ -95,32 +93,13 @@ cmake_install.cmake
 *.ninja_deps
 *.ninja_log
 
-# Linker scripts
-*.ld
-
 # Flash driver files
 *.cfx
-
-# MCUXpresso config tools
-*.mex
-
-# -------------------------------
-# NXP SDK (download from nxp.com)
-# -------------------------------
-
-**/Debug/
-**/drivers/
-**/device/
-**/CMSIS/
-**/component/
-**/utilities/
-**/startup/
-**/board/
-**/doc/
 
 # -------------------
 # OS Generated Files
 # -------------------
+
 # Windows
 Thumbs.db
 Desktop.ini
