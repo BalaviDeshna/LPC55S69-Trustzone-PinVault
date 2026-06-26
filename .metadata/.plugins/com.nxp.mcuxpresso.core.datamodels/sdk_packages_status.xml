@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sdk-packages>
+<package hash="1781759652170" path="C:\Users\Mettlesemi03\mcuxpresso\02\SDKPackages\SDK_2_9_2_MIMXRT1176xxxxx.zip" schema="manifest-schema/sdk_manifest_v3.15.xsd"/>
+<package hash="1782101947944" path="C:\Users\Mettlesemi03\mcuxpresso\02\SDKPackages\SDK_26_03_00_MIMXRT1170-EVKB.zip" schema="manifest-schema/sdk_manifest_v3.15.xsd"/>
+<package hash="1780901763179" path="C:\Users\Mettlesemi03\mcuxpresso\02\SDKPackages\com.nxp.mcuxpresso.sdk.sdk_2.x_lpcxpresso55s69_p2site_24.12.0.20191125144618290939663653217776.zip" schema="manifest-schema/sdk_manifest_v3.15.xsd"/>
+<package hash="1736485836000" path="C:\nxp\MCUXpressoIDE_24.12.148\ide\plugins\com.nxp.mcuxpresso.core.datamodels.resources_24.12.0.202407110909\override" schema="manifest-schema/sdk_manifest_v3.3.xsd"/>
+<package hash="1781604350587" path="C:\Users\Mettlesemi03\mcuxpresso\02\SDKPackages\SDK_2_9_1_SLN-VIZN3D-IOT.zip" schema="manifest-schema/sdk_manifest_v3.15.xsd"/>
+<package hash="1736485836000" path="C:\nxp\MCUXpressoIDE_24.12.148\ide\plugins\com.nxp.mcuxpresso.core.datamodels.resources_24.12.0.202407110909\fragments" schema="manifest-schema/sdk_manifest_v3.3.xsd"/>
+<package hash="1781758490235" path="C:\Users\Mettlesemi03\mcuxpresso\02\SDKPackages\com.nxp.mcuxpresso.sdk.sdk_2.x_qn9090dk6_p2site_2.6.5.201911251446672011497186028387.zip" schema="manifest-schema/sdk_manifest_v3.7.xsd"/>
+</sdk-packages>

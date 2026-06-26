@@ -1,0 +1,3820 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2024 NXP -->
+<!-- NXP Confidential and Proprietary. This software is owned or controlled by NXP and may only be used strictly in accordance with the applicable
+     license terms. By expressly accepting such terms or by downloading, installing, activating and/or otherwise using the software, you are agreeing
+     that you have read, and that you agree to comply with and are bound by, such license terms. If you do not agree to be bound by the applicable
+     license terms, then you may not retain, install, activate or otherwise use the software. -->
+<schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        targetNamespace="http://mcuxpresso.nxp.com/XSD/mex_configuration_17"
+        xmlns:tns="http://mcuxpresso.nxp.com/XSD/mex_configuration_17">
+
+  <simpleType name="DeviceAttrs">
+    <annotation>
+      <documentation>
+        Device attributes for Device memory (n = non-/no, G = Gathering, R = Reordering, E = Early Write Acknowledgement)
+      </documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="nGnRnE" />
+      <enumeration value="nGnRE" />
+      <enumeration value="nGRE" />
+      <enumeration value="GRE" />
+    </restriction>
+  </simpleType>
+
+  <simpleType name="MemoryType">
+    <annotation>
+      <documentation>
+        Type of system memory region
+      </documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="normal" />
+      <enumeration value="device" />
+    </restriction>
+  </simpleType>
+
+  <complexType name="dependencies">
+    <sequence>
+      <element name="dependency" minOccurs="0" maxOccurs="unbounded">
+        <complexType>
+          <sequence>
+            <element name="feature" minOccurs="1" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element name="data">
+                    <complexType>
+                      <simpleContent>
+                        <extension base="string">
+                          <attribute name="type" type="string" use="optional"/>
+                          <attribute name="unit" type="string" use="optional"/>
+                        </extension>
+                      </simpleContent>
+                    </complexType>
+                  </element>
+                </sequence>
+                <attribute name="name" type="string"></attribute>
+                <attribute name="evaluation" type="string"></attribute>
+                <attribute name="configuration" type="string" use="optional"></attribute>
+              </complexType>
+            </element>
+          </sequence>
+          <attribute name="resourceType" type="string"></attribute>
+          <attribute name="resourceId" type="string"></attribute>
+          <attribute name="description" type="string"></attribute>
+          <attribute name="problem_level" type="int"></attribute>
+          <attribute name="source" type="string"></attribute>
+          <attribute name="boot_init_only" type="boolean" use="optional" default="false"></attribute>
+        </complexType>
+      </element>
+    </sequence>
+    <attribute name="class" type="string" />
+  </complexType>
+
+  <complexType name="generated_project_files">
+    <sequence>
+      <element name="file" minOccurs="0" maxOccurs="unbounded">
+        <complexType>
+          <sequence/>
+          <attribute name="path" type="string"></attribute>
+          <attribute name="update_enabled" type="boolean"></attribute>
+          <attribute name="derived" type="boolean" use="optional">
+            <annotation>
+              <documentation>Optional flag marking sources which are derived (true) based on sources from the tools.
+              Such files are not generated after each change, but only when project code is updated on disk.
+              By default this flag is omitted (false) for sources generated from javascript.</documentation>
+            </annotation>
+          </attribute>
+        </complexType>
+      </element>
+    </sequence>
+  </complexType>
+
+  <complexType name="periphs_setting_base">
+    <attribute name="name" type="string" use="required"/>
+  </complexType>
+
+  <group name="periphs_setting_list">
+    <sequence>
+      <choice minOccurs="0" maxOccurs="unbounded">
+        <group ref="tns:periphs_array_setting"/>
+        <group ref="tns:periphs_scalar_setting"/>
+        <group ref="tns:periphs_set_setting"/>
+        <group ref="tns:periphs_struct_setting"/>
+      </choice>
+    </sequence>
+  </group>
+
+  <group name="periphs_array_setting">
+    <sequence>
+      <element name="array">
+        <complexType>
+          <complexContent>
+            <extension base="tns:periphs_setting_base">
+              <sequence>
+                <group ref="tns:periphs_setting_list" minOccurs="1" maxOccurs="unbounded"/>
+              </sequence>
+            </extension>
+          </complexContent>
+        </complexType>
+      </element>
+    </sequence>
+  </group>
+
+  <group name="periphs_scalar_setting">
+    <sequence>
+      <element name="setting">
+        <complexType>
+          <complexContent>
+            <extension base="tns:periphs_setting_base">
+              <attribute name="value" type="string" use="required"/>
+            </extension>
+          </complexContent>
+        </complexType>
+      </element>
+    </sequence>
+  </group>
+
+  <group name="periphs_set_setting">
+    <sequence>
+      <element name="set">
+        <complexType>
+          <complexContent>
+            <extension base="tns:periphs_setting_base">
+              <sequence>
+                <choice minOccurs="1" maxOccurs="unbounded">
+                  <element name="selected"/>
+                  <element name="id"/>
+                </choice>
+              </sequence>
+            </extension>
+          </complexContent>
+        </complexType>
+      </element>
+    </sequence>
+  </group>
+
+  <group name="periphs_struct_setting">
+    <sequence>
+      <element name="struct">
+        <complexType>
+          <complexContent>
+            <extension base="tns:periphs_setting_base">
+              <sequence>
+                <group ref="tns:periphs_setting_list" minOccurs="1" maxOccurs="unbounded"/>
+              </sequence>
+            </extension>
+          </complexContent>
+        </complexType>
+      </element>
+    </sequence>
+  </group>
+
+  <complexType name="periphs_settings">
+    <complexContent>
+      <extension base="tns:periphs_setting_base">
+        <sequence>
+          <group ref="tns:periphs_setting_list" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+        <attribute name="quick_selection" type="string"/>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <group name="tee_domains">
+    <sequence>
+      <element name="domains" minOccurs="0" maxOccurs="1">
+        <complexType>
+          <sequence>
+            <element name="domain" minOccurs="1" maxOccurs="unbounded">
+              <complexType>
+                <attribute name="name" type="string" use="required">
+                  <annotation>
+                    <documentation>
+                      Name of the domain.
+                    </documentation>
+                  </annotation>
+                </attribute>
+              </complexType>
+            </element>
+          </sequence>
+        </complexType>
+      </element>
+    </sequence>
+  </group>
+
+  <complexType name="ahbsc_settings">
+    <sequence>
+      <element name="relative_region" minOccurs="0" maxOccurs="unbounded">
+        <complexType>
+          <attribute name="start" type="integer" use="required">
+            <annotation>
+              <documentation>Offset of the region.</documentation>
+            </annotation>
+          </attribute>
+          <attribute name="size" type="integer" use="required">
+            <annotation>
+              <documentation>Size of the region.</documentation>
+            </annotation>
+          </attribute>
+          <attribute name="security" type="string" use="required">
+            <annotation>
+              <documentation>Assigned security level state.</documentation>
+            </annotation>
+          </attribute>
+          <attribute name="memory" type="string" use="required">
+            <annotation>
+              <documentation>ID of the selected memory.</documentation>
+            </annotation>
+          </attribute>
+        </complexType>
+      </element> <!-- tee - ahb - relative_region -->
+      <element name="masters" minOccurs="1" maxOccurs="1">
+        <complexType>
+          <sequence>
+            <element name="master" minOccurs="1" maxOccurs="unbounded">
+              <complexType>
+                <attribute name="id" type="string" use="required">
+                  <annotation>
+                    <documentation>ID of the master.</documentation>
+                  </annotation>
+                </attribute>
+                <attribute name="security" type="string" use="required">
+                  <annotation>
+                    <documentation>ID of the assigned security level for the master.</documentation>
+                  </annotation>
+                </attribute>
+              </complexType>
+            </element> <!-- tee - ahb - masters - master -->
+          </sequence>
+        </complexType>
+      </element> <!-- tee - ahb - masters -->
+      <element name="peripherals" minOccurs="1" maxOccurs="1"> <!-- tee - ahb - peripherals -->
+        <complexType>
+          <sequence>
+            <element name="peripheral" minOccurs="1" maxOccurs="unbounded">
+              <complexType>
+                <attribute name="id" type="string" use="required">
+                  <annotation>
+                    <documentation>ID of the slave.</documentation>
+                  </annotation>
+                </attribute>
+                <attribute name="security" type="string" use="required">
+                  <annotation>
+                    <documentation>ID of the assigned security level for the slave.</documentation>
+                  </annotation>
+                </attribute>
+              </complexType>
+            </element> <!-- tee - ahb - peripherals - peripheral -->
+          </sequence>
+        </complexType>
+      </element> <!-- tee - ahb - peripherals -->
+      <group ref="tns:tee_domains" minOccurs="0" maxOccurs="1"/>
+      <group ref="tns:tee_interrupts" minOccurs="0" maxOccurs="1"/>
+      <group ref="tns:tee_pin_masks" minOccurs="0" maxOccurs="1"/>
+      <group ref="tns:tee_ports" minOccurs="0" maxOccurs="1"/>
+      <group ref="tns:tee_triggers" minOccurs="0" maxOccurs="1"/>
+    </sequence>
+    <attribute name="id" type="string" use="optional">
+      <annotation>
+        <documentation>A locally unique AHBSC identifier.</documentation>
+      </annotation>
+    </attribute>
+  </complexType>
+
+  <group name="tee_ahb">
+    <sequence>
+      <element name="ahb" minOccurs="0" maxOccurs="1"> <!-- tee - ahb -->
+        <complexType>
+          <complexContent>
+            <extension base="tns:ahbsc_settings"/>
+          </complexContent>
+        </complexType>
+      </element> <!-- tee - ahb -->
+    </sequence>
+  </group>
+  
+  <group name="tee_ahbsc_rwx">
+    <sequence>
+      <element name="ahbsc_rwx" minOccurs="0" maxOccurs="1"> <!-- tee - ahbsc_rwx -->
+        <complexType>
+          <complexContent>
+            <extension base="tns:ahbsc_settings">
+              <sequence>
+                <element name="mbcs" minOccurs="0" maxOccurs="1">
+                  <complexType>
+                    <sequence>
+                      <element name="mbc" minOccurs="0" maxOccurs="unbounded">
+                        <complexType>
+                          <complexContent>
+                            <extension base="tns:TrdcMbcDef"/>
+                          </complexContent>
+                        </complexType>
+                      </element> <!-- tee - ahbsc_rwx - mbcs - mbc -->
+                    </sequence>
+                  </complexType>
+                </element> <!-- tee - trdc - mbcs -->
+              </sequence>
+            </extension>
+          </complexContent>
+        </complexType>
+      </element> <!-- tee - ahbsc_rwx -->
+    </sequence>
+  </group>
+  
+  <group name="tee_rdc">
+    <sequence>
+      <element name="rdc" minOccurs="0" maxOccurs="1"> <!-- tee - rdc -->
+        <complexType>
+          <sequence>
+            <group ref="tns:tee_domains" minOccurs="0" maxOccurs="1"/>
+            <group ref="tns:tee_interrupts" minOccurs="0" maxOccurs="1"/>
+            <group ref="tns:tee_pin_masks" minOccurs="0" maxOccurs="1"/>
+            <group ref="tns:tee_ports" minOccurs="0" maxOccurs="1"/>
+            <element name="masters" minOccurs="1" maxOccurs="1">
+              <complexType>
+                <sequence>
+                  <element name="master" minOccurs="1" maxOccurs="unbounded">
+                    <complexType>
+                      <sequence>
+                        <element name="domain_assignment" minOccurs="0" maxOccurs="unbounded">
+                          <complexType>
+                            <attribute name="locked" type="boolean" use="required">
+                              <annotation>
+                                <documentation>Whether the assignment is locked.</documentation>
+                              </annotation>
+                            </attribute>
+                            <attribute name="domain_id" type="integer" use="required">
+                              <annotation>
+                                <documentation>Selected domain ID.</documentation>
+                              </annotation>
+                            </attribute>
+                          </complexType>
+                        </element>
+                      </sequence>
+                      <attribute name="id" type="string" use="required">
+                        <annotation>
+                          <documentation>ID of the master.</documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element> <!-- tee - rdc - masters - master -->
+                </sequence>
+              </complexType>
+            </element> <!-- tee - rdc - masters -->
+            <element name="pdaps" minOccurs="0" maxOccurs="1">
+              <complexType>
+                <sequence>
+                  <element name="pdap" minOccurs="1" maxOccurs="unbounded">
+                    <complexType>
+                      <sequence>
+                        <element name="slaves" minOccurs="0" maxOccurs="1">
+                          <complexType>
+                            <sequence>
+                              <element name="slave" minOccurs="1" maxOccurs="unbounded">
+                                <complexType>
+                                  <sequence>
+                                    <element name="domain" minOccurs="1" maxOccurs="unbounded">
+                                      <complexType>
+                                        <attribute name="template" type="string" use="required">
+                                          <annotation>
+                                            <documentation>Unique template identifier.</documentation>
+                                          </annotation>
+                                        </attribute>
+                                      </complexType>
+                                    </element> <!-- tee - rdc - pdaps - pdap - slaves - slave - domain -->
+                                  </sequence>
+                                  <attribute name="id" type="string" use="required">
+                                    <annotation>
+                                      <documentation>Unique slave identifier.</documentation>
+                                    </annotation>
+                                  </attribute>
+                                  <attribute name="locked" type="string" use="required">
+                                    <annotation>
+                                      <documentation>Locked flag of the slave.</documentation>
+                                    </annotation>
+                                  </attribute>
+                                  <attribute name="semaphore_required" type="string" use="required">
+                                    <annotation>
+                                      <documentation>Semaphore requirement flag of the slave.</documentation>
+                                    </annotation>
+                                  </attribute>
+                                </complexType>
+                              </element> <!-- tee - rdc - pdaps - pdap - slaves - slave -->
+                            </sequence>
+                          </complexType>
+                        </element> <!-- tee - rdc - pdaps - pdap - slaves -->
+                      </sequence>
+                      <attribute name="checker_id" type="string" use="required">
+                        <annotation>
+                          <documentation>Unique identifier of the Peripheral Domain Access Checker.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="using_global_templates" type="boolean" use="optional">
+                        <annotation>
+                          <documentation>Whether global (or local) checker templates are used.</documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element> <!-- tee - rdc - pdaps - pdap -->
+                </sequence>
+              </complexType>
+            </element> <!-- tee - rdc - pdaps -->
+            <element name="mrcs" minOccurs="0" maxOccurs="1">
+              <complexType>
+                <sequence>
+                  <element name="mrc" minOccurs="1" maxOccurs="unbounded">
+                    <complexType>
+                      <sequence>
+                        <element name="slaves" minOccurs="0" maxOccurs="1">
+                          <complexType>
+                            <sequence>
+                              <element name="slave" minOccurs="1" maxOccurs="unbounded">
+                                <complexType>
+                                  <sequence>
+                                    <element name="domain" minOccurs="1" maxOccurs="unbounded">
+                                      <complexType>
+                                        <attribute name="template" type="string" use="required">
+                                          <annotation>
+                                            <documentation>Unique template identifier.</documentation>
+                                          </annotation>
+                                        </attribute>
+                                      </complexType>
+                                    </element>
+                                    <element name="base_region" minOccurs="1" maxOccurs="1">
+                                      <complexType>
+                                        <attribute name="start" type="integer" use="required">
+                                          <annotation>
+                                            <documentation>Start address of the slave memory region.</documentation>
+                                          </annotation>
+                                        </attribute>
+                                        <attribute name="size" type="integer" use="required">
+                                          <annotation>
+                                            <documentation>Size of the slave memory region.</documentation>
+                                          </annotation>
+                                        </attribute>
+                                      </complexType>
+                                    </element> <!-- tee - rdc - mrcs - mrc - slaves - slave - domain -->
+                                  </sequence>
+                                  <attribute name="id" type="string" use="required">
+                                    <annotation>
+                                      <documentation>Unique slave identifier.</documentation>
+                                    </annotation>
+                                  </attribute>
+                                  <attribute name="enabled" type="string" use="required">
+                                    <annotation>
+                                      <documentation>Enabled flag of the slave.</documentation>
+                                    </annotation>
+                                  </attribute>
+                                  <attribute name="locked" type="string" use="required">
+                                    <annotation>
+                                      <documentation>Locked flag of the slave.</documentation>
+                                    </annotation>
+                                  </attribute>
+                                  <attribute name="index" type="integer" use="required">
+                                    <annotation>
+                                      <documentation>Index of the region.</documentation>
+                                    </annotation>
+                                  </attribute>
+                                </complexType>
+                              </element> <!-- tee - rdc - mrcs - mrc - slaves - slave -->
+                            </sequence>
+                          </complexType>
+                        </element> <!-- tee - rdc - mrcs - mrc - slaves -->
+                      </sequence>
+                      <attribute name="checker_id" type="string" use="required">
+                        <annotation>
+                          <documentation>Unique identifier of the Memory Region Checker.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="using_global_templates" type="boolean" use="optional">
+                        <annotation>
+                          <documentation>Whether global (or local) checker templates are used.</documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element> <!-- tee - rdc - mrcs - mrc -->
+                </sequence>
+              </complexType>
+            </element> <!-- tee - rdc - mrcs -->
+            <group ref="tns:tee_xrdc2" minOccurs="0" maxOccurs="unbounded"/>
+          </sequence>
+          <attribute name="id" type="string" use="optional">
+            <annotation>
+              <documentation>A locally unique RDC identifier.</documentation>
+            </annotation>
+          </attribute>
+        </complexType>
+      </element> <!-- tee - rdc -->
+    </sequence>
+  </group>
+
+  <group name="tee_root">
+    <sequence>
+      <element name="root" minOccurs="0" maxOccurs="1"> <!-- tee - root -->
+        <complexType>
+          <choice minOccurs="1" maxOccurs="unbounded">
+            <group ref="tns:tee_xtrdc" minOccurs="0" maxOccurs="1"/>
+            <group ref="tns:tee_trdc" minOccurs="0" maxOccurs="1"/>
+          </choice>
+        </complexType>
+      </element> <!-- tee - root -->
+    </sequence>
+  </group>
+  
+  <complexType name="TrdcMbcDef">
+    <annotation>
+      <documentation>
+        Base type for the TRDC MBC memory region.
+      </documentation>
+    </annotation>
+    <sequence>
+      <group ref="tns:tee_trdc_templates"/> <!-- tee - trdc - mbcs -mbc - templates -->
+      <element name="slaves" minOccurs="0" maxOccurs="1">
+        <complexType>
+          <sequence>
+            <element name="slave" minOccurs="1" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element name="domain" minOccurs="1" maxOccurs="unbounded">
+                    <complexType>
+                      <attribute name="security" type="string" use="required">
+                        <annotation>
+                          <documentation>ID of the assigned security state.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="template" type="string" use="required">
+                        <annotation>
+                          <documentation>Unique template identifier.</documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element> <!-- tee - trdc - mbcs - mbc - slaves - slave - domain -->
+                  <element name="base_region" minOccurs="0" maxOccurs="1">
+                    <complexType>
+                      <attribute name="start" type="integer" use="required">
+                        <annotation>
+                          <documentation>Start address of the slave memory region.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="size" type="integer" use="required">
+                        <annotation>
+                          <documentation>Size of the slave memory region.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="security" type="string" use="optional">
+                        <annotation>
+                          <documentation>ID of the assigned security state.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="memory" type="string" use="optional">
+                        <annotation>
+                          <documentation>ID of the selected memory.</documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element> <!-- tee - trdc - mbcs - mbc - slaves - slave - memory_region -->
+                </sequence>
+                <attribute name="id" type="string" use="required">
+                  <annotation>
+                    <documentation>Unique slave identifier.</documentation>
+                  </annotation>
+                </attribute>
+              </complexType>
+            </element> <!-- tee - trdc - mbcs - mbc - slaves - slave -->
+          </sequence>
+        </complexType>
+      </element> <!-- tee - trdc - mbcs - mbc - slaves -->
+    </sequence>
+    <attribute name="checker_id" type="string" use="required">
+      <annotation>
+        <documentation>Unique identifier of the Memory Block Checker.</documentation>
+      </annotation>
+    </attribute>
+    <attribute name="using_global_templates" type="boolean" use="optional">
+      <annotation>
+        <documentation>Whether global (or local) checker templates are used.</documentation>
+      </annotation>
+    </attribute>
+  </complexType>
+  
+  <complexType name="XtrdcMscDef">
+    <annotation>
+      <documentation>
+        Base type for the XtRDC MSC memory region.
+      </documentation>
+    </annotation>
+    <sequence>
+      <group ref="tns:tee_trdc_templates"/> <!-- tee - trdc - mscs -msc - templates -->
+      <element name="slaves" minOccurs="0" maxOccurs="1">
+        <complexType>
+          <sequence>
+            <element name="slave" minOccurs="1" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element name="domain" minOccurs="1" maxOccurs="unbounded">
+                    <complexType>
+                      <attribute name="template" type="string" use="required">
+                        <annotation>
+                          <documentation>Unique template identifier.</documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element> <!-- tee - xtrdc - mscs - msc - slaves - slave - domain -->
+                  <element name="base_region" minOccurs="0" maxOccurs="1">
+                    <complexType>
+                      <attribute name="start" type="integer" use="required">
+                        <annotation>
+                          <documentation>Start address of the slave memory region.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="size" type="integer" use="required">
+                        <annotation>
+                          <documentation>Size of the slave memory region.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="security" type="string" use="optional">
+                        <annotation>
+                          <documentation>ID of the assigned security state.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="memory" type="string" use="optional">
+                        <annotation>
+                          <documentation>ID of the selected memory.</documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element> <!-- tee - xtrdc - mscs - msc - slaves - slave - memory_region -->
+                </sequence>
+                <attribute name="id" type="string" use="required">
+                  <annotation>
+                    <documentation>Unique slave identifier.</documentation>
+                  </annotation>
+                </attribute>
+                <attribute name="enabled" type="string" use="required">
+                  <annotation>
+                    <documentation>Enabled flag of the slave.</documentation>
+                  </annotation>
+                </attribute>
+                <attribute name="locked" type="string" use="required">
+                  <annotation>
+                    <documentation>Locked flag of the slave.</documentation>
+                  </annotation>
+                </attribute>
+                <attribute name="eal" type="string" use="optional">
+                  <annotation>
+                    <documentation>Exclusive Access Lock flag of the slave.</documentation>
+                  </annotation>
+                </attribute>
+              </complexType>
+            </element> <!-- tee - trdc - mscs - msc - slaves - slave -->
+          </sequence>
+        </complexType>
+      </element> <!-- tee - xtrdc - mscs - msc - slaves -->
+    </sequence>
+    <attribute name="checker_id" type="string" use="required">
+      <annotation>
+        <documentation>Unique identifier of the Memory Slot Controller.</documentation>
+      </annotation>
+    </attribute>
+    <attribute name="using_global_templates" type="boolean" use="optional">
+      <annotation>
+        <documentation>Whether global (or local) checker templates are used.</documentation>
+      </annotation>
+    </attribute>
+  </complexType>
+
+  <complexType name="TrdcMrcDef">
+    <annotation>
+      <documentation>
+        Base type for the TRDC/XtRDC MRC memory region.
+      </documentation>
+    </annotation>
+    <sequence>
+      <group ref="tns:tee_trdc_templates"/> <!-- tee - trdc - mrcs -mrc - templates -->
+      <element name="domains" minOccurs="0" maxOccurs="1">
+        <complexType>
+          <sequence>
+            <element name="domain" minOccurs="0" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element name="region" minOccurs="0" maxOccurs="unbounded">
+                    <complexType>
+                      <attribute name="start" type="integer" use="required">
+                        <annotation>
+                          <documentation>Start address of the slave memory region.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="size" type="integer" use="required">
+                        <annotation>
+                          <documentation>Size of the slave memory region.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="security" type="string" use="required">
+                        <annotation>
+                          <documentation>ID of the assigned security state.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="template" type="string" use="required">
+                        <annotation>
+                          <documentation>ID of the assigned access template.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="domain_templates" type="string" use="optional">
+                        <annotation>
+                          <documentation>ID of the assigned domain template.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="enabled" type="boolean" use="required">
+                        <annotation>
+                          <documentation>Whether the region is enabled.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="code_region" type="boolean" use="optional">
+                        <annotation>
+                          <documentation>Whether the code region is enabled.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="eal" type="string" use="optional">
+                        <annotation>
+                          <documentation>Exclusive access lock.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="index" type="string" use="required">
+                        <annotation>
+                          <documentation>ID of the selected memory region.</documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element> <!-- tee - trdc - mrcs - mrc - domains - domain - region -->
+                </sequence>
+              </complexType>
+            </element> <!-- tee - trdc - mrcs - mrc - regions - region -->
+          </sequence>
+        </complexType>
+      </element> <!-- tee - trdc - mrcs - mrc - regions -->
+    </sequence>
+    <attribute name="checker_id" type="string" use="required">
+      <annotation>
+        <documentation>Unique identifier of the Memor Resource Checker.</documentation>
+      </annotation>
+    </attribute>
+    <attribute name="using_global_templates" type="boolean" use="optional">
+      <annotation>
+        <documentation>Whether global (or local) checker templates are used.</documentation>
+      </annotation>
+    </attribute>
+  </complexType>
+
+  <complexType name="Xrdc2PacDef">
+    <annotation>
+      <documentation>
+        Base type for the XRDC2/XtRDC PAC memory region.
+      </documentation>
+    </annotation>
+    <sequence>
+      <element name="slaves" minOccurs="0" maxOccurs="1">
+        <complexType>
+          <sequence>
+            <element name="slave" minOccurs="1" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element name="domain" minOccurs="1" maxOccurs="unbounded">
+                    <complexType>
+                      <attribute name="template" type="string" use="required">
+                        <annotation>
+                          <documentation>Unique template identifier.</documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element> <!-- tee - xrdc2 - pacs - pac - slaves - slave - domain -->
+                  <element name="base_region" minOccurs="0" maxOccurs="1">
+                    <complexType>
+                      <attribute name="start" type="integer" use="required">
+                        <annotation>
+                          <documentation>Start address of the slave memory region.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="size" type="integer" use="required">
+                        <annotation>
+                          <documentation>Size of the slave memory region.</documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element>
+                </sequence>
+                <attribute name="id" type="string" use="required">
+                  <annotation>
+                    <documentation>Unique slave identifier.</documentation>
+                  </annotation>
+                </attribute>
+                <attribute name="enabled" type="string" use="required">
+                  <annotation>
+                    <documentation>Enabled flag of the slave.</documentation>
+                  </annotation>
+                </attribute>
+                <attribute name="locked" type="string" use="required">
+                  <annotation>
+                    <documentation>Locked flag of the slave.</documentation>
+                  </annotation>
+                </attribute>
+                <attribute name="eal" type="string" use="optional">
+                  <annotation>
+                    <documentation>Exclusive Access Lock flag of the slave.</documentation>
+                  </annotation>
+                </attribute>
+              </complexType>
+            </element> <!-- tee - xrdc2 - pacs - pac - slaves - slave -->
+          </sequence>
+        </complexType>
+      </element> <!-- tee - xrdc2 - pacs - pac - slaves -->
+    </sequence>
+    <attribute name="checker_id" type="string" use="required">
+      <annotation>
+        <documentation>Unique identifier of the Peripheral Access Checker.</documentation>
+      </annotation>
+    </attribute>
+    <attribute name="using_global_templates" type="boolean" use="optional">
+      <annotation>
+        <documentation>Whether global (or local) checker templates are used.</documentation>
+      </annotation>
+    </attribute>
+  </complexType>
+
+  <group name="tee_xtrdc">
+    <sequence>
+      <element name="xtrdc" minOccurs="0" maxOccurs="1"> <!-- tee - xtrdc -->
+        <complexType>
+          <sequence>
+            <group ref="tns:tee_domains" minOccurs="0" maxOccurs="1"/>
+            <group ref="tns:tee_interrupts" minOccurs="0" maxOccurs="1"/>
+            <group ref="tns:tee_pin_masks" minOccurs="0" maxOccurs="1"/>
+            <group ref="tns:tee_ports" minOccurs="0" maxOccurs="1"/>
+            <group ref="tns:tee_trdc_masters" minOccurs="1" maxOccurs="1"/>
+            <group ref="tns:tee_trdc_templates"/>
+            <element name="mscs" minOccurs="0" maxOccurs="1">
+              <complexType>
+                <sequence>
+                  <element name="msc" minOccurs="0" maxOccurs="unbounded">
+                    <complexType>
+                      <complexContent>
+                        <extension base="tns:XtrdcMscDef"/>
+                      </complexContent>
+                    </complexType>
+                  </element> <!-- tee - xtrdc - mscs - msc -->
+                </sequence>
+              </complexType>
+            </element> <!-- tee - xtrdc - mscs -->
+            <element name="mrcs" minOccurs="0" maxOccurs="1">
+              <complexType>
+                <sequence>
+                  <element name="mrc" minOccurs="0" maxOccurs="unbounded">
+                    <complexType>
+                      <complexContent>
+                        <extension base="tns:TrdcMrcDef"/>
+                      </complexContent>
+                    </complexType>
+                  </element> <!-- tee - xtrdc - mrcs - mrc -->
+                </sequence>
+              </complexType>
+            </element> <!-- tee - xtrdc - mrcs -->
+            <element name="pacs" minOccurs="0" maxOccurs="1">
+              <complexType>
+                <sequence>
+                  <element name="pac" minOccurs="0" maxOccurs="unbounded">
+                    <complexType>
+                      <complexContent>
+                        <extension base="tns:Xrdc2PacDef"/>
+                      </complexContent>
+                    </complexType>
+                  </element> <!-- tee - xtrdc - pacs - pac -->
+                </sequence>
+              </complexType>
+            </element> <!-- tee - xtrdc - pacs -->
+          </sequence>
+          <attribute name="id" type="string" use="optional">
+            <annotation>
+              <documentation>Unique identifier for XTRDC instance</documentation>
+            </annotation>
+          </attribute>
+        </complexType>
+      </element>
+    </sequence>
+  </group>
+ 
+  <group name="tee_trdc">
+    <sequence>
+      <element name="trdc" minOccurs="0" maxOccurs="1"> <!-- tee - trdc -->
+        <complexType>
+          <sequence>
+            <group ref="tns:tee_domains" minOccurs="0" maxOccurs="1"/>
+            <group ref="tns:tee_interrupts" minOccurs="0" maxOccurs="1"/>
+            <group ref="tns:tee_pin_masks" minOccurs="0" maxOccurs="1"/>
+            <group ref="tns:tee_ports" minOccurs="0" maxOccurs="1"/>
+            <group ref="tns:tee_trdc_masters" minOccurs="1" maxOccurs="1"/>
+            <element name="mbcs" minOccurs="0" maxOccurs="1">
+              <complexType>
+                <sequence>
+                  <element name="mbc" minOccurs="0" maxOccurs="unbounded">
+                    <complexType>
+                      <complexContent>
+                        <extension base="tns:TrdcMbcDef"/>
+                      </complexContent>
+                    </complexType>
+                  </element> <!-- tee - trdc - mbcs - mbc -->
+                </sequence>
+              </complexType>
+            </element> <!-- tee - trdc - mbcs -->
+            <element name="mrcs" minOccurs="0" maxOccurs="1">
+              <complexType>
+                <sequence>
+                  <group ref="tns:tee_trdc_templates"/>
+                  <element name="mrc" minOccurs="0" maxOccurs="unbounded">
+                    <complexType>
+                      <complexContent>
+                        <extension base="tns:TrdcMrcDef"/>
+                      </complexContent>
+                    </complexType>
+                  </element> <!-- tee - trdc - mrcs - mrc -->
+                </sequence>
+              </complexType>
+            </element> <!-- tee - trdc - mrcs -->
+          </sequence>
+          <attribute name="id" type="string" use="optional">
+            <annotation>
+              <documentation>A locally unique TRDC identifier.</documentation>
+            </annotation>
+          </attribute>
+        </complexType>
+      </element> <!-- tee - trdc -->
+    </sequence>
+  </group>
+
+  <group name="tee_xrdc2">
+    <sequence>
+      <element name="xrdc2" minOccurs="0" maxOccurs="unbounded"> <!-- tee - xrdc2 -->
+        <complexType>
+          <sequence>
+            <group ref="tns:tee_domains" minOccurs="0" maxOccurs="1"/>
+            <group ref="tns:tee_interrupts" minOccurs="0" maxOccurs="1"/>
+            <group ref="tns:tee_pin_masks" minOccurs="0" maxOccurs="1"/>
+            <group ref="tns:tee_ports" minOccurs="0" maxOccurs="1"/>
+            <element name="masters" minOccurs="1" maxOccurs="1">
+              <complexType>
+                <sequence>
+                  <element name="master" minOccurs="1" maxOccurs="unbounded">
+                    <complexType>
+                      <sequence>
+                        <element name="domain_assignment" minOccurs="0" maxOccurs="unbounded">
+                          <complexType>
+                            <attribute name="secure" type="string" use="optional">
+                              <annotation>
+                                <documentation>ID of the assigned security level for the master.</documentation>
+                              </annotation>
+                            </attribute>
+                            <attribute name="privileged" type="string" use="optional">
+                              <annotation>
+                                <documentation>ID of the assigned privilege level for the master.</documentation>
+                              </annotation>
+                            </attribute>
+                            <attribute name="enabled" type="boolean" use="required">
+                              <annotation>
+                                <documentation>Whether the assignment is active.</documentation>
+                              </annotation>
+                            </attribute>
+                            <attribute name="locked" type="boolean" use="required">
+                              <annotation>
+                                <documentation>Whether the assignment is locked.</documentation>
+                              </annotation>
+                            </attribute>
+                            <attribute name="domain_id" type="integer" use="required">
+                              <annotation>
+                                <documentation>Selected domain ID.</documentation>
+                              </annotation>
+                            </attribute>
+                            <attribute name="stream_id" type="integer" use="optional">
+                              <annotation>
+                                <documentation>Stream id number.</documentation>
+                              </annotation>
+                            </attribute>
+                            <attribute name="match_input" type="integer" use="optional">
+                              <annotation>
+                                <documentation>Match input number.</documentation>
+                              </annotation>
+                            </attribute>
+                            <attribute name="mask_input" type="integer" use="optional">
+                              <annotation>
+                                <documentation>Mask input number.</documentation>
+                              </annotation>
+                            </attribute>
+                          </complexType>
+                        </element>
+                      </sequence>
+                      <attribute name="id" type="string" use="required">
+                        <annotation>
+                          <documentation>ID of the master.</documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element> <!-- tee - xrdc2 - masters - master -->
+                </sequence>
+              </complexType>
+            </element> <!-- tee - xrdc2 - masters -->
+            <element name="pacs" minOccurs="0" maxOccurs="1">
+              <complexType>
+                <sequence>
+                  <element name="pac" minOccurs="1" maxOccurs="unbounded">
+                    <complexType>
+                      <complexContent>
+                        <extension base="tns:Xrdc2PacDef"/>
+                      </complexContent>
+                    </complexType>
+                  </element> <!-- tee - xrdc2 - pacs - pac -->
+                </sequence>
+              </complexType>
+            </element> <!-- tee - xrdc2 - pacs -->
+            <element name="mrcs" minOccurs="0" maxOccurs="1">
+              <complexType>
+                <sequence>
+                  <element name="mrc" minOccurs="1" maxOccurs="unbounded">
+                    <complexType>
+                      <sequence>
+                        <element name="slaves" minOccurs="0" maxOccurs="1">
+                          <complexType>
+                            <sequence>
+                              <element name="slave" minOccurs="1" maxOccurs="unbounded">
+                                <complexType>
+                                  <sequence>
+                                    <element name="domain" minOccurs="1" maxOccurs="unbounded">
+                                      <complexType>
+                                        <attribute name="template" type="string" use="required">
+                                          <annotation>
+                                            <documentation>Unique template identifier.</documentation>
+                                          </annotation>
+                                        </attribute>
+                                      </complexType>
+                                    </element> <!-- tee - xrdc2 - mrcs - mrc - slaves - slave - domain -->
+                                    <element name="base_region" minOccurs="1" maxOccurs="1">
+                                      <complexType>
+                                        <attribute name="start" type="integer" use="required">
+                                          <annotation>
+                                            <documentation>Start address of the slave memory region.</documentation>
+                                          </annotation>
+                                        </attribute>
+                                        <attribute name="size" type="integer" use="required">
+                                          <annotation>
+                                            <documentation>Size of the slave memory region.</documentation>
+                                          </annotation>
+                                        </attribute>
+                                      </complexType>
+                                    </element>
+                                  </sequence>
+                                  <attribute name="id" type="string" use="required">
+                                    <annotation>
+                                      <documentation>Unique slave identifier.</documentation>
+                                    </annotation>
+                                  </attribute>
+                                  <attribute name="enabled" type="string" use="required">
+                                    <annotation>
+                                      <documentation>Enabled flag of the slave.</documentation>
+                                    </annotation>
+                                  </attribute>
+                                  <attribute name="locked" type="string" use="required">
+                                    <annotation>
+                                      <documentation>Locked flag of the slave.</documentation>
+                                    </annotation>
+                                  </attribute>
+                                  <attribute name="eal" type="string" use="optional">
+                                    <annotation>
+                                      <documentation>Exclusive Access Lock flag of the slave.</documentation>
+                                    </annotation>
+                                  </attribute>
+                                  <attribute name="index" type="integer" use="required">
+                                    <annotation>
+                                      <documentation>Index of the region.</documentation>
+                                    </annotation>
+                                  </attribute>
+                                </complexType>
+                              </element> <!-- tee - xrdc2 - mrcs - mrc - slaves - slave -->
+                            </sequence>
+                          </complexType>
+                        </element> <!-- tee - xrdc2 - mrcs - mrc - slaves -->
+                      </sequence>
+                      <attribute name="checker_id" type="string" use="required">
+                        <annotation>
+                          <documentation>Unique identifier of the Memory Region Checker.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="using_global_templates" type="boolean" use="optional">
+                        <annotation>
+                          <documentation>Whether global (or local) checker templates are used.</documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element> <!-- tee - xrdc2 - mrcs - mrc -->
+                </sequence>
+              </complexType>
+            </element> <!-- tee - xrdc2 - mrcs -->
+            <element name="mscs" minOccurs="0" maxOccurs="1">
+              <complexType>
+                <sequence>
+                  <element name="msc" minOccurs="1" maxOccurs="unbounded">
+                    <complexType>
+                      <sequence>
+                        <element name="slaves" minOccurs="0" maxOccurs="1">
+                          <complexType>
+                            <sequence>
+                              <element name="slave" minOccurs="1" maxOccurs="unbounded">
+                                <complexType>
+                                  <sequence>
+                                    <element name="domain" minOccurs="1" maxOccurs="unbounded">
+                                      <complexType>
+                                        <attribute name="template" type="string" use="required">
+                                          <annotation>
+                                            <documentation>Unique template identifier.</documentation>
+                                          </annotation>
+                                        </attribute>
+                                      </complexType>
+                                    </element>
+                                    <element name="base_region" minOccurs="1" maxOccurs="1">
+                                      <complexType>
+                                        <attribute name="start" type="integer" use="required">
+                                          <annotation>
+                                            <documentation>Start address of the slave memory region.</documentation>
+                                          </annotation>
+                                        </attribute>
+                                        <attribute name="size" type="integer" use="required">
+                                          <annotation>
+                                            <documentation>Size of the slave memory region.</documentation>
+                                          </annotation>
+                                        </attribute>
+                                      </complexType>
+                                    </element> <!-- tee - xrdc2 - mscs - msc - slaves - slave - domain -->
+                                  </sequence>
+                                  <attribute name="id" type="string" use="required">
+                                    <annotation>
+                                      <documentation>Unique slave identifier.</documentation>
+                                    </annotation>
+                                  </attribute>
+                                  <attribute name="enabled" type="string" use="required">
+                                    <annotation>
+                                      <documentation>Enabled flag of the slave.</documentation>
+                                    </annotation>
+                                  </attribute>
+                                  <attribute name="locked" type="string" use="required">
+                                    <annotation>
+                                      <documentation>Locked flag of the slave.</documentation>
+                                    </annotation>
+                                  </attribute>
+                                  <attribute name="eal" type="string" use="optional">
+                                    <annotation>
+                                      <documentation>Exclusive Access Lock flag of the slave.</documentation>
+                                    </annotation>
+                                  </attribute>
+                                </complexType>
+                              </element> <!-- tee - xrdc2 - mscs - msc - slaves - slave -->
+                            </sequence>
+                          </complexType>
+                        </element> <!-- tee - xrdc2 - mscs - msc - slaves -->
+                      </sequence>
+                      <attribute name="checker_id" type="string" use="required">
+                        <annotation>
+                          <documentation>Unique identifier of the Memory Slot Checker.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="using_global_templates" type="boolean" use="optional">
+                        <annotation>
+                          <documentation>Whether global (or local) checker templates are used.</documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element> <!-- tee - xrdc2 - mscs - msc -->
+                </sequence>
+              </complexType>
+            </element> <!-- tee - xrdc2 - mscs -->
+          </sequence>
+          <attribute name="id" type="string" use="optional">
+            <annotation>
+              <documentation>A locally unique XRDC2 identifier.</documentation>
+            </annotation>
+          </attribute>
+        </complexType>
+      </element> <!-- tee - xrdc2 -->
+    </sequence>
+  </group>
+
+  <group name="tee_interrupts">
+    <sequence>
+      <element name="interrupts" minOccurs="0" maxOccurs="1"> <!-- tee - ahb - interrupts -->
+        <complexType>
+          <sequence>
+            <element name="masking" minOccurs="0" maxOccurs="1">
+              <complexType>
+                <sequence>
+                  <element name="interrupt" minOccurs="0" maxOccurs="unbounded">
+                    <complexType>
+                      <attribute name="id" type="string" use="required">
+                        <annotation>
+                          <documentation>ID of the interrupt</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="masked" type="string" use="required">
+                        <annotation>
+                          <documentation>Masked flag of the interrupt (masked from core1 or not)</documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element>
+                </sequence>
+              </complexType>
+            </element>
+            <element name="security" minOccurs="0" maxOccurs="1">
+              <complexType>
+                <sequence>
+                  <element name="interrupt" minOccurs="0" maxOccurs="unbounded">
+                    <complexType>
+                      <attribute name="id" type="string" use="required">
+                        <annotation>
+                          <documentation>ID of the interrupt</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="secure" type="string" use="required">
+                        <annotation>
+                          <documentation>Secure flag of the interrupt</documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element>
+                </sequence>
+              </complexType>
+            </element>
+          </sequence>
+        </complexType>
+      </element> <!-- tee - ahb - interrupts -->
+    </sequence>
+  </group>
+
+  <group name="tee_pin_masks">
+    <sequence>
+      <element name="pins_masks" minOccurs="0" maxOccurs="1"> <!-- tee - pin masking v10 -->
+        <complexType>
+          <sequence>
+            <element name="port" minOccurs="0" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element name="pin_mask" minOccurs="0" maxOccurs="unbounded">
+                    <complexType>
+                      <attribute name="id" type="string" use="required">
+                        <annotation>
+                          <documentation>ID of the pin</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="masked" type="string" use="required">
+                        <annotation>
+                          <documentation>Masked flag of the pin (mask from reading or not)</documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element>
+                </sequence>
+                <attribute name="id" type="string" use="required">
+                  <annotation>
+                    <documentation>ID of the IO port</documentation>
+                  </annotation>
+                </attribute>
+              </complexType>
+            </element>
+          </sequence>
+        </complexType>
+      </element> <!-- tee - pin masking v10 -->
+    </sequence>
+  </group>
+
+  <group name="tee_ports">
+    <sequence>
+      <element name="ports" minOccurs="0" maxOccurs="1"> <!-- tee - ports (pin masking, pin security, pin interrupt security) v11 -->
+        <complexType>
+          <sequence>
+            <element name="port" minOccurs="0" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element name="pin_mask" minOccurs="0" maxOccurs="unbounded">
+                    <complexType>
+                      <attribute name="id" type="string" use="required">
+                        <annotation>
+                          <documentation>ID of the pin</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="masked" type="string" use="required">
+                        <annotation>
+                          <documentation>Masked flag of the pin (mask from reading or not)</documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element>
+                  <element name="pin_security" minOccurs="0" maxOccurs="unbounded">
+                    <complexType>
+                      <attribute name="id" type="string" use="required">
+                        <annotation>
+                          <documentation>ID of the pin</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="security" type="string" use="required">
+                        <annotation>
+                          <documentation>Security level of the pin</documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element>
+                  <element name="pin_interrupt_security" minOccurs="0" maxOccurs="unbounded">
+                    <complexType>
+                      <attribute name="id" type="string" use="required">
+                        <annotation>
+                          <documentation>ID of the pin</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="security" type="string" use="required">
+                        <annotation>
+                          <documentation>Security level of the pin interrupt</documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element>
+                </sequence>
+                <attribute name="id" type="string" use="required">
+                  <annotation>
+                    <documentation>ID of the IO port</documentation>
+                  </annotation>
+                </attribute>
+              </complexType>
+            </element>
+          </sequence>
+        </complexType>
+      </element> <!-- tee - ports (pin masking, pin security, pin interrupt security) v11 -->
+    </sequence>
+  </group>
+
+  <group name="tee_triggers">
+    <sequence>
+      <element name="triggers" minOccurs="0" maxOccurs="1">
+        <complexType>
+          <sequence>
+            <element name="triggers_output" minOccurs="0" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element name="triggers_input" minOccurs="0" maxOccurs="unbounded">
+                      <complexType>
+                        <attribute name="id" type="string" use="required">
+                          <annotation>
+                            <documentation>ID of the trigger input</documentation>
+                          </annotation>
+                        </attribute>
+                        <attribute name="selected" type="boolean" use="required">
+                          <annotation>
+                            <documentation>The input signal is selected as trigger or not</documentation>
+                          </annotation>
+                        </attribute>
+                        <attribute name="writable" type="boolean" use="required">
+                          <annotation>
+                            <documentation>The input signal field is writable or not</documentation>
+                          </annotation>
+                        </attribute>
+                      </complexType>
+                  </element>
+                </sequence>
+                <attribute name="id" type="string" use="required">
+                    <annotation>
+                      <documentation>ID of the trigger output</documentation>
+                    </annotation>
+                </attribute>
+              </complexType>
+            </element>
+          </sequence>
+        </complexType>
+      </element>
+    </sequence>
+  </group>
+
+  <group name="tee_trdc_templates">
+    <sequence>
+      <element name="access_templates" minOccurs="0" maxOccurs="1">
+        <complexType>
+          <sequence>
+            <element name="template" minOccurs="0" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element name="access" minOccurs="0" maxOccurs="unbounded">
+                    <complexType>
+                      <attribute name="read" type="string" use="required">
+                        <annotation>
+                          <documentation>Read access permission for the specified security level.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="write" type="string" use="required">
+                        <annotation>
+                          <documentation>Write access permission for the specified security level.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="execute" type="string" use="required">
+                        <annotation>
+                          <documentation>Execute access permission for the specified security level.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="security_level" type="string" use="required">
+                        <annotation>
+                          <documentation>Access level containing address attributes (security and privilege).</documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element>
+                </sequence>
+                <attribute name="id" type="string" use="required">
+                  <annotation>
+                    <documentation>ID of the user's security template.</documentation>
+                  </annotation>
+                </attribute>
+                <attribute name="name" type="string" use="optional">
+                  <annotation>
+                    <documentation>Name of the user's security template.</documentation>
+                  </annotation>
+                </attribute>
+                <attribute name="locked" type="boolean" use="optional">
+                  <annotation>
+                    <documentation>Whether the templated is locked.</documentation>
+                  </annotation>
+                </attribute>
+                <attribute name="editable" type="boolean" use="optional">
+                  <annotation>
+                    <documentation>Flag for editable templates.</documentation>
+                  </annotation>
+                </attribute>
+                <attribute name="bitfield" type="string" use="optional">
+                  <annotation>
+                    <documentation>Template bitfield name.</documentation>
+                  </annotation>
+                </attribute>
+              </complexType>
+            </element> <!-- tee - trdc - templates - template -->
+          </sequence>
+        </complexType>
+      </element> <!-- tee - trdc - templates -->
+    </sequence>
+  </group>
+
+  <group name="tee_trdc_masters">
+    <sequence>
+      <element name="masters" minOccurs="1" maxOccurs="1">
+        <complexType>
+          <sequence>
+            <element name="master" minOccurs="1" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element name="domain_assignment" minOccurs="0" maxOccurs="unbounded">
+                    <complexType>
+                      <attribute name="secure" type="string" use="optional">
+                        <annotation>
+                          <documentation>ID of the assigned security level for the master.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="privileged" type="string" use="optional">
+                        <annotation>
+                          <documentation>ID of the assigned privilege level for the master.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="security" type="string" use="optional">
+                        <annotation>
+                          <documentation>ID of the assigned aggregate security level for the master.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="enabled" type="boolean" use="required">
+                        <annotation>
+                          <documentation>Whether the assignment is active.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="locked" type="boolean" use="required">
+                        <annotation>
+                          <documentation>Whether the assignment is locked.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="domain_id" type="integer" use="required">
+                        <annotation>
+                          <documentation>Selected domain ID.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="domain_bypass" type="boolean" use="optional">
+                        <annotation>
+                          <documentation>Whether the domain ID is bypassed from the caller.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="domain_input" type="string" use="optional">
+                        <annotation>
+                          <documentation>Selector of the domain ID source.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="pid" type="integer" use="optional">
+                        <annotation>
+                          <documentation>PID infornation.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="pid_mask" type="integer" use="optional">
+                        <annotation>
+                          <documentation>PID mask information.</documentation>
+                        </annotation>
+                      </attribute>
+                      <attribute name="pid_enable" type="integer" use="optional">
+                        <annotation>
+                          <documentation>PID enable information.</documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element>
+                </sequence>
+                <attribute name="id" type="string" use="required">
+                  <annotation>
+                    <documentation>ID of the master.</documentation>
+                  </annotation>
+                </attribute>
+              </complexType>
+            </element> <!-- tee - trdc - masters - master -->
+          </sequence>
+        </complexType>
+      </element> <!-- tee - trdc - masters -->
+    </sequence>
+  </group>
+      
+<group name="expansion_headers_group">
+  <sequence>
+  <element name="expansion_headers" minOccurs="0" maxOccurs="1">
+    <annotation>
+      <documentation> Expansion headers on the expanded board (main board or expansion adapter). It is an instance of the expansion header definition. It specifies connectors mapping and pins mapping
+        (header pins to processor pins / expanded connector pins / external signals). Board can have more expansion headers, e.g. LPC55S69 has Arduino UNO R3, PMOD, Microe Click
+      </documentation>
+    </annotation>
+    <complexType>
+      <sequence>
+        <element name="expansion_header" minOccurs="0" maxOccurs="unbounded">
+          <complexType>
+            <sequence>
+              <element name="connectors" minOccurs="0">
+                <annotation>
+                  <documentation> Mapping of connectors from expansion header definition to board or header connection of expansion adapter board, e.g C1 -> J3, C2 -> J2, C3 -> J1, C4 -> J4 </documentation>
+                </annotation>
+                <complexType>
+                  <sequence>
+                    <element name="connector" minOccurs="0" maxOccurs="unbounded">
+                      <annotation>
+                        <documentation> Definition of connections between connector pins and processor pins or expansion adapter board connector or external signals, e.g. C1[1] -> 14, C1[6] -> A[1],
+                          C1[12] -> ground </documentation>
+                      </annotation>
+                      <complexType>
+                        <sequence>
+                          <element name="pins" minOccurs="0">
+                            <complexType>
+                              <sequence>
+                                <element name="pin" minOccurs="0" maxOccurs="unbounded">
+                                  <complexType>
+                                    <attribute name="id" type="int" use="required">
+                                      <annotation>
+                                        <documentation> Id of the connector pin in the expansion header definition, 1 .. number of connector pins
+                                        </documentation>
+                                      </annotation>
+                                    </attribute>
+                                    <attribute name="pin_num" type="string">
+                                      <annotation>
+                                        <documentation> Coordinates of the processor pin which the header pin is connected to. Or coordinates of header connection on expansion adapter board. </documentation>
+                                      </annotation>
+                                    </attribute>
+                                    <attribute name="pin_signal" type="string">
+                                      <annotation>
+                                        <documentation> Id of the processor pin which the header pin is connected to (optional; not used for expansion adapter boards) </documentation>
+                                      </annotation>
+                                    </attribute>
+                                    <attribute name="external_signal_types" type="string">
+                                      <annotation>
+                                        <documentation> Accepted external signal types from board perspective (separated by space), '*' for any signal, e.g.
+                                          'gpio_in uart_rx', 'ground', '*'. Specification of the attribute determines that the header pin is connected to an
+                                          external signal. </documentation>
+                                      </annotation>
+                                    </attribute>
+                                    <attribute name="name" type="string">
+                                      <annotation>
+                                        <documentation> Name of the connector pin on the board (optional), e.g. A0, A1, nRST, +5V </documentation>
+                                      </annotation>
+                                    </attribute>
+                                  </complexType>
+                                </element>
+                              </sequence>
+                            </complexType>
+                          </element>
+                        </sequence>
+                        <attribute name="id" type="string" use="required">
+                          <annotation>
+                            <documentation> Id of the connector in the expansion header definition, e.g C1, C2, C3, C4 </documentation>
+                          </annotation>
+                        </attribute>
+                        <attribute name="name" type="string" use="required">
+                          <annotation>
+                            <documentation> Name of the connector on the expanded board, e.g J3, J2, J1, J4 </documentation>
+                          </annotation>
+                        </attribute>
+                      </complexType>
+                    </element>
+                  </sequence>
+                </complexType>
+              </element>
+            </sequence>
+            <attribute name="id" type="string" use="required">
+              <annotation>
+                <documentation> Id of the expansion header definition, e.g standard_arduino </documentation>
+              </annotation>
+            </attribute>
+            <attribute name="name" type="string" use="required">
+              <annotation>
+                <documentation> Name of the expansion header on the board, e.g Arduino </documentation>
+              </annotation>
+            </attribute>
+          </complexType>
+        </element>  <!-- Expanion header -->
+      </sequence>
+    </complexType>
+  </element>  <!-- Expansion headers -->
+  </sequence>
+</group>
+
+<complexType name="struct_boot">
+	<sequence>
+		<element name="setting">
+			<complexType>
+				<sequence>
+					<element name="setting" minOccurs="0" maxOccurs="unbounded" >
+						<complexType>
+							<attribute name="name" type="string" use="required" />
+							<attribute name="value" type="string" use="required" />
+						</complexType>
+					</element>
+				</sequence>
+			</complexType>
+		</element>
+		<element name="arrays" >
+			<complexType>
+				<sequence>
+					<element name="array" minOccurs="0" maxOccurs="unbounded" >
+						<complexType>
+							<sequence>
+								<element name="struct">
+									<complexType>
+										<sequence>
+											<element name="setting">
+												<complexType>
+													<sequence>
+														<element name="setting">
+															<complexType>
+																<attribute name="name" type="string" use="required" />
+																<attribute name="value" type="string" use="required" />
+															</complexType>
+														</element>
+													</sequence>
+												</complexType>
+											</element>
+											<element name="arrays"/>
+											<element name="child_structs"/>
+										</sequence>
+										<attribute name="name" type="string" use="required" />
+									</complexType>
+								</element>
+							</sequence>
+							<attribute name="name" type="string" use="required" />
+						</complexType>
+					</element>
+				</sequence>
+			</complexType>
+		</element>
+		<element name="child_structs">
+			<complexType>
+				<sequence>
+					<element name="struct" minOccurs="0" maxOccurs="unbounded" >
+						<complexType>
+							<sequence>
+								<element name="setting">
+									<complexType>
+										<sequence>
+											<element name="setting">
+												<complexType>
+													<attribute name="name" type="string" use="required" />
+													<attribute name="value" type="string" use="required" />
+												</complexType>
+											</element>
+										</sequence>
+									</complexType>
+								</element>
+								<element name="arrays"/>
+								<element name="child_structs"/>
+							</sequence>
+							<attribute name="name" type="string" use="required"/>
+						</complexType>
+					</element>
+				</sequence>
+			</complexType>
+		</element>
+	</sequence>
+	<attribute name="name" type="string" use="required"/>
+</complexType>
+
+  <!-- Expansion Board Type -->
+  <complexType name="expansion_board_type">
+    <annotation>
+      <documentation>
+        Expansion board definition
+      </documentation>
+    </annotation>
+    <sequence>
+      <element name="header_connection">
+        <annotation>
+          <documentation>
+            Reference to expansion header definition and specification of expansion board pins
+          </documentation>
+        </annotation>
+        <complexType>
+          <sequence>
+            <element name="connectors">
+              <annotation>
+                <documentation>
+                  Set of connectors of the referenced expansion header
+                </documentation>
+              </annotation>
+              <complexType>
+                <sequence>
+                  <element name="connector" maxOccurs="unbounded">
+                    <complexType>
+                      <sequence>
+                        <element name="pins">
+                          <complexType>
+                            <sequence>
+                              <element name="pin" maxOccurs="unbounded">
+                                <complexType>
+                                  <attribute name="ref" type="int" use="required">
+                                    <annotation>
+                                      <documentation>
+                                        Id of the connector pin in the expansion header definition, 1 .. number of connector pins
+                                      </documentation>
+                                    </annotation>
+                                  </attribute>
+                                  <attribute name="name" type="string" use="required">
+                                    <annotation>
+                                      <documentation>
+                                        Name of the connector pin on the expansion board, e.g. RL1, RL2, 5V, GND
+                                      </documentation>
+                                    </annotation>
+                                  </attribute>
+                                  <attribute name="description" type="string">
+                                    <annotation>
+                                      <documentation>
+                                        Description of the connector pin function (signal type) on the expansion board
+                                      </documentation>
+                                    </annotation>
+                                  </attribute>
+                                  <attribute name="signal_type" type="string">
+                                    <annotation>
+                                      <documentation>
+                                        General signal type from board perspective, e.g. GPIO_IN, UART RX
+                                      </documentation>
+                                    </annotation>
+                                  </attribute>
+                                </complexType>
+                              </element>
+                            </sequence>
+                          </complexType>
+                        </element>
+                      </sequence>
+                      <attribute name="ref" type="string" use="required">
+                        <annotation>
+                          <documentation>
+                            Id of the connector in the expansion header definition
+                          </documentation>
+                        </annotation>
+                      </attribute>
+                    </complexType>
+                  </element>
+                </sequence>
+              </complexType>
+            </element>
+          </sequence>
+          <attribute name="ref" type="string" use="required">
+            <annotation>
+              <documentation>
+                Id of the expansion header definition, e.g. micro_bus
+              </documentation>
+            </annotation>
+          </attribute>
+        </complexType>
+      </element>
+      <element name="code_identifiers">
+        <annotation>
+          <documentation>
+            Identifiers to be used in the code
+          </documentation>
+        </annotation>
+        <complexType>
+          <attribute name="prefix" type="string" use="required">
+            <annotation>
+              <documentation>
+                Identifier to be used in the code, e.g. MIKROE_. It is used as a prefix of the functional group which contains routing for the expansion board.
+              </documentation>
+            </annotation>
+          </attribute>
+        </complexType>
+      </element>
+      <group ref="tns:expansion_headers_group"/>
+    </sequence>
+    <attribute name="id" type="string" use="required">
+      <annotation>
+        <documentation>
+          Id of the expansion board, e.g. mikroe_relay_click
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="name" type="string" use="required">
+      <annotation>
+        <documentation>
+          Name of the expansion board, e.g. MikroE Relay Click board
+        </documentation>
+      </annotation>
+    </attribute>
+  </complexType>
+  
+  <!-- Connected Expansion Board Type -->
+  <complexType name="connected_board_type">
+    <annotation>
+      <documentation>
+        Connection of expansion board to expansion header. Function determines the functional group name which configures routing for the expansion
+        board.
+      </documentation>
+    </annotation>
+    <attribute name="board" type="string" use="required">
+      <annotation>
+        <documentation>
+          Id of the expansion board, e.g. mikroe_relay_click
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="header" type="string" use="required">
+      <annotation>
+        <documentation>
+          Name of the expansion header which the expansion board is connected to, e.g. MikroE Click Header
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="function" type="string">
+      <annotation>
+        <documentation>
+          Name of Functional group which configures the routing for the expansion board
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="identifier_mode" type="string">
+      <annotation>
+        <documentation>
+          Identifier mode used for routed pins 
+        </documentation>
+      </annotation>
+    </attribute>
+  </complexType>
+
+  <!-- External User Signals -->
+  <complexType name="external_user_signals_type">
+    <annotation>
+      <documentation>
+        External signals defined by the user
+      </documentation>
+    </annotation>
+    <sequence>
+      <element name="routingDetailsColumns" minOccurs="0" maxOccurs="1">
+        <annotation>
+          <documentation>
+            Columns from Routing Details view that are visible in External User Signals view. Some elements may be to preserve order with properties.
+          </documentation>
+        </annotation>
+        <complexType>
+          <sequence>
+            <element name="column" type="string" minOccurs="1" maxOccurs="unbounded"/>            
+          </sequence>
+        </complexType>
+      </element>
+      <element name="properties" minOccurs="0" maxOccurs="1">
+        <annotation>
+          <documentation>
+            Properties defined for signals
+          </documentation>
+        </annotation>
+        <complexType>
+          <sequence>
+            <element name="property" type="string" minOccurs="1" maxOccurs="unbounded"/>            
+          </sequence>
+        </complexType>
+      </element>
+      <element name="signals" minOccurs="0" maxOccurs="1">
+        <complexType>
+          <annotation>
+            <documentation>
+              Actual external signals defined by the user
+            </documentation>
+          </annotation>
+          <sequence>
+            <element name="external_user_signal" minOccurs="1" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element name="pin_connections" minOccurs="1" maxOccurs="1">
+                    <complexType>
+                      <annotation>
+                        <documentation>
+                          Coorditantes of MCU pins connected to this signal
+                        </documentation>
+                      </annotation>
+                      <sequence>
+                        <element name="pin" type="string" minOccurs="0" maxOccurs="unbounded"/>
+                      </sequence>
+                    </complexType>
+                  </element>
+                  <element name="property_values" minOccurs="1" maxOccurs="1">
+                    <annotation>
+                      <documentation>
+                        Values of properties for the signal.
+                      </documentation>
+                    </annotation>
+                    <complexType>
+                      <sequence>
+                        <element name="value" type="string" minOccurs="0" maxOccurs="unbounded"></element>
+                      </sequence>
+                    </complexType>
+                  </element>
+                </sequence>
+                <attribute name="id" use="required">
+                  <annotation>
+                    <documentation>
+                      Unique ID of the signal
+                    </documentation>
+                  </annotation>
+                </attribute>
+              </complexType>
+            </element>
+          </sequence>
+        </complexType>
+      </element>
+    </sequence>
+  </complexType>
+
+  <element name="configuration">
+    <complexType>
+      <sequence>
+        <element name="common">
+          <complexType>
+            <all>
+              <element name="processor" type="string">
+                <annotation>
+                  <documentation>
+                    Identification of the selected processor.
+                  </documentation>
+                </annotation>
+              </element>
+              <element name="package" type="string" minOccurs="0">
+                <annotation>
+                  <documentation>
+                    Selected processor package.
+                  </documentation>
+                </annotation>
+              </element>
+              <element name="board" type="string" minOccurs="0">
+                <annotation>
+                  <documentation>
+                    Board name, if the configuration represents board.
+                  </documentation>
+                </annotation>
+              </element>
+              <element name="board_revision" type="string" minOccurs="0" maxOccurs="1">
+                <annotation>
+                  <documentation>
+                    Board revision name, if the configuration represents board.
+                  </documentation>
+                </annotation>
+              </element>
+              <element name="kit" type="string" minOccurs="0" maxOccurs="1">
+                <annotation>
+                  <documentation>
+                    Board plus accessories name, if the configuration represents board with accessories.
+                  </documentation>
+                </annotation>
+              </element>
+              <element name="shields" minOccurs="0" maxOccurs="1">
+                <complexType>
+                  <sequence>
+                    <element name="shield" minOccurs="0" maxOccurs="unbounded">
+                      <annotation>
+                        <documentation>
+                          List of shields in case the project is based on a kit.
+                        </documentation>
+                      </annotation>
+                      <complexType>
+                        <attribute name="name" type="string" use="required" />
+                        <attribute name="revision" type="string" use="required" />
+                      </complexType>
+                    </element>
+                  </sequence>
+                </complexType>
+              </element>
+              <element name="mcu_data" type="string">
+                <annotation>
+                  <documentation>
+                    Identification of version of used processor data.
+                  </documentation>
+                </annotation>
+              </element>
+              <element name="mex_variant" type="string" minOccurs="0" maxOccurs="1">
+                <annotation>
+                  <documentation>
+                    Relative path from data directory to the alternative MEX file for board/kit. It can be only file name without path, the path will be computed.
+                  </documentation>
+                </annotation>
+              </element>
+              <element name="example" type="string" minOccurs="0" maxOccurs="1">
+                <annotation>
+                  <documentation>
+                    Deprecated, not used since V4: Relative path from SDK root to example root (using eclipse path separator), if the configuration is based on SDK Example.
+                  </documentation>
+                </annotation>
+              </element>
+              <element name="cores" minOccurs="0">
+                <complexType>
+                  <sequence>
+                    <element name="core" minOccurs="0" maxOccurs="unbounded">
+                      <annotation>
+                        <documentation>
+                          List of all supported cores for selected processor
+                        </documentation>
+                      </annotation>
+                      <complexType>
+                        <attribute name="name" type="string" use="required" />
+                        <attribute name="id" type="string" use="required" />
+                        <attribute name="description" type="string" use="optional" />
+                      </complexType>
+                    </element>
+                  </sequence>
+                  <attribute name="selected" type="string" use="required">
+                    <annotation>
+                      <documentation>ID of the selected core; empty string if no core selected</documentation>
+                    </annotation>
+                  </attribute>
+                </complexType>
+              </element>
+              <element name="description" type="string" minOccurs="0" maxOccurs="1">
+                <annotation>
+                  <documentation>
+                    User description of the MEX configuration.
+                  </documentation>
+                </annotation>
+              </element>
+            </all>
+          </complexType>
+        </element>
+
+        <element name="preferences" minOccurs="0" maxOccurs="1">
+          <annotation>
+            <documentation>
+              List of preferences
+            </documentation>
+          </annotation>
+          <complexType>
+            <all>
+              <element name="validate_boot_init_only" type="boolean" minOccurs="0" maxOccurs="1">
+                <annotation>
+                  <documentation>
+                    Flag whether validation engine should validate against the boot init configurations (true) or against all configs (false)
+                  </documentation>
+                </annotation>
+              </element>
+              <element name="generate_yaml" minOccurs="0" maxOccurs="1">
+                <annotation>
+                  <documentation>
+                    Option for preference of YAML in generated sources.
+                    full - full YAML
+                    none - no YAML in sources at all
+                  </documentation>
+                </annotation>
+                <simpleType>
+                  <restriction base="string">
+                    <enumeration value="full"></enumeration>
+                    <enumeration value="none"></enumeration>
+                  </restriction>
+                </simpleType>
+              </element>
+              <element name="custom_copyright" minOccurs="0" maxOccurs="1">
+                <annotation>
+                  <documentation>
+                    Custom copyright header to by generated into the C/H source
+                  </documentation>
+                </annotation>
+                <complexType>
+                  <all>
+                    <element name="enabled" type="boolean">
+                      <annotation>
+                        <documentation>
+                          Flag whether the tool should insert custom copyright header into the C/H source
+                        </documentation>
+                      </annotation>
+                    </element>
+                    <element name="text" type="string">
+                      <annotation>
+                        <documentation>
+                          Text inserted as a custom copyright header into the C/H source
+                        </documentation>
+                      </annotation>
+                    </element>
+                  </all>
+                </complexType>
+              </element>
+              <element name="output_path_overrides" minOccurs="0" maxOccurs="1">
+                <annotation>
+                  <documentation>
+                    List of rules to override the output path
+                  </documentation>
+                </annotation>
+                <complexType>
+                  <sequence>
+                    <element name="rule" minOccurs="0" maxOccurs="unbounded">
+                      <annotation>
+                        <documentation>
+                          Rule to override the output path
+                        </documentation>
+                      </annotation>
+                      <complexType>
+                        <all>
+                          <element name="description" type="string">
+                            <annotation>
+                              <documentation>
+                                User description of the rule
+                              </documentation>
+                            </annotation>
+                          </element>
+                          <element name="enabled" type="boolean">
+                            <annotation>
+                              <documentation>
+                                Flag whether the rule is applied in override or not
+                              </documentation>
+                            </annotation>
+                          </element>
+                          <element name="regex" type="string">
+                            <annotation>
+                              <documentation>
+                                Regular expression of the rule, used on override
+                              </documentation>
+                            </annotation>
+                          </element>
+                          <element name="replacement" type="string">
+                            <annotation>
+                              <documentation>
+                                Replacement for the regular expression of the rule, used on override
+                              </documentation>
+                            </annotation>
+                          </element>
+                        </all>
+                      </complexType>
+                    </element>
+                  </sequence>
+                </complexType>
+              </element>
+              <element name="generate_registers_defines" type="boolean" minOccurs="0" maxOccurs="1">
+                <annotation>
+                  <documentation>
+                    Generate defines of clocks registers.
+                  </documentation>
+                </annotation>
+              </element>
+              <element name="generate_extended_information" type="boolean" minOccurs="0" maxOccurs="1">
+                <annotation>
+                  <documentation>
+                    Flag whether the tool should generate extended information into the C/H sources.
+                  </documentation>
+                </annotation>
+              </element>
+              <element name="generate_code_modified_registers_only" type="boolean" minOccurs="0" maxOccurs="1">
+                <annotation>
+                  <documentation>
+                    Generate code only for registers that are different from the after-reset state.
+                  </documentation>
+                </annotation>
+              </element>
+              <element name="update_include_paths" type="boolean" minOccurs="0" maxOccurs="1">
+                <annotation>
+                  <documentation>
+                    Update C/C++ include paths during the Update code action.
+                  </documentation>
+                </annotation>
+              </element>
+              <element name="project_links" minOccurs="0" maxOccurs="1">
+                <annotation>
+                  <documentation>
+                    Project links to the Toolchain projects
+                  </documentation>
+                </annotation>
+                <complexType>
+                  <sequence>
+                    <element name="project_link" minOccurs="0" maxOccurs="1">
+                      <annotation>
+                        <documentation>
+                          Project link to the toolchain project
+                        </documentation>
+                      </annotation>
+                      <complexType>
+                        <attribute name="path" type="string">
+                          <annotation>
+                            <documentation>
+                              Custom path to the toolchain project, can be absolute path or relative against saved configuration(MEX) file
+                            </documentation>
+                          </annotation>
+                        </attribute>
+                      </complexType>
+                    </element>
+                  </sequence>
+                </complexType>
+              </element>
+              <element name="enable_code_preview" type="boolean" minOccurs="0" maxOccurs="1">
+                <annotation>
+                  <documentation>
+                   Flag for code preview enabled state. If this flag is true, code is generated automatically, otherwise code needs to be manually generated.
+                  </documentation>
+                </annotation>
+              </element>
+            </all>
+          </complexType>
+        </element>
+
+        <element name="tools">
+          <annotation>
+            <documentation>
+              List of settings of supported tools
+            </documentation>
+          </annotation>
+          <complexType>
+            <all minOccurs="0">
+              <!-- ####### SDK BUILDER ####### -->
+              <element name="sdk_builder" minOccurs="0" maxOccurs="1">
+                <annotation>
+                  <documentation>configuration of SDK builder</documentation>
+                </annotation>
+                <complexType>
+                  <sequence>
+                    <element name="package_configuration">
+                      <complexType>
+                        <all>
+                          <element name="toolchain" type="string"></element>
+                          <element name="hostOS" type="string"></element>
+                          <element name="optional_components">
+                            <complexType>
+                              <sequence>
+                                <element name="component" minOccurs="0" maxOccurs="unbounded">
+                                  <complexType>
+                                    <all>
+                                      <element name="dependencies" type="tns:dependencies" minOccurs="0" maxOccurs="1"/>
+                                    </all>
+                                    <attribute name="id" type="string"></attribute>
+                                  </complexType>
+                                </element>
+                              </sequence>
+                              <attribute name="class" type="string" />
+                            </complexType>
+                          </element>
+                        </all>
+                        <attribute name="name" type="string"></attribute>
+                      </complexType>
+                    </element>
+                  </sequence>
+                  <attribute name="name" type="string"></attribute>
+                  <attribute name="version" type="string"></attribute>
+                  <attribute name="enabled" type="boolean" use="required">
+                    <annotation>
+                      <documentation>Flag whether the tool is enabled. If not enabled, it does not perform any action.</documentation>
+                    </annotation>
+                  </attribute>
+                  <attribute name="update_project_code" type="string" use="optional">
+                    <annotation>
+                      <documentation>The tool does not update any code</documentation>
+                    </annotation>
+                  </attribute>
+                </complexType>
+              </element>
+
+              <!-- ####### PINS ####### -->
+              <element name="pins" minOccurs="0" maxOccurs="1">
+                <annotation>
+                  <documentation>
+                    Pins tool settings
+                  </documentation>
+                </annotation>
+                <complexType>
+                  <all>
+                    <element name="generated_project_files" type="tns:generated_project_files" minOccurs="0" maxOccurs="1" />
+                    <element name="pins_profile" minOccurs="1" maxOccurs="1">
+                      <complexType>
+                        <sequence>
+                          <element name="processor_version" type="string" />
+                          <element name="pin_labels" minOccurs="0" maxOccurs="1">
+                            <annotation>
+                              <documentation>
+                                Pin labels and their identifiers definition
+                              </documentation>
+                            </annotation>
+                            <complexType>
+                              <sequence>
+                                <element name="pin_label" minOccurs="0" maxOccurs="unbounded">
+                                  <annotation>
+                                    <documentation>
+                                      Pin label definition
+                                      - pin_num - either number (1) or coordinate (A1)
+                                      - pin_signal - Routed pin name / or signal name
+                                      - label - user defined pin label
+                                      - identifier - used as suffix for C/C++ identifier
+                                      - comment - user defined pin comment
+                                    </documentation>
+                                  </annotation>
+                                  <complexType>
+                                    <attribute name="pin_num" type="string" use="required" />
+                                    <attribute name="pin_signal" type="string" use="required" />
+                                    <attribute name="label" type="string" use="required" />
+                                    <attribute name="identifier" type="string" />
+                                    <attribute name="comment" type="string" />
+                                  </complexType>
+                                </element>
+                              </sequence>
+                            </complexType>
+                          </element>
+                          <group ref="tns:expansion_headers_group"/>
+                          <element name="expansion_boards" minOccurs="0" maxOccurs="1">
+                            <annotation>
+                              <documentation>
+                                Expansion board definitions imported from an external XML definition file.
+                              </documentation>
+                            </annotation>
+                            <complexType>
+                              <sequence>
+                                <element name="expansion_board" type="tns:expansion_board_type" maxOccurs="unbounded"/>
+                              </sequence>
+                            </complexType>
+                          </element>
+                          <element name="connected_expansion_boards" minOccurs="0"  maxOccurs="1">
+                            <annotation>
+                              <documentation>
+                                Expansion boards connected to expansion headers.
+                              </documentation>
+                            </annotation>
+                            <complexType>
+                              <sequence>
+                                <element name="connected_board" type="tns:connected_board_type" maxOccurs="unbounded"/>
+                              </sequence>
+                            </complexType>
+                          </element>
+                          <element name="external_user_signals" minOccurs="0" maxOccurs="1" type="tns:external_user_signals_type">
+                            <annotation>
+                              <documentation>
+                                External signals defined by the user
+                              </documentation>
+                            </annotation>
+                          </element>
+                          <element name="power_domains" minOccurs="0" maxOccurs="1">
+                            <annotation>
+                              <documentation>
+                                Power domains configuration. This list contains all configured power domains.
+                              </documentation>
+                            </annotation>
+                            <complexType>
+                              <sequence>
+                                <element name="power_domain" minOccurs="0" maxOccurs="unbounded">
+                                  <complexType>
+                                    <attribute name="name" type="string" use="required" />
+                                    <attribute name="value" type="decimal" use="required" />
+                                  </complexType>
+                                </element>
+                              </sequence>
+                            </complexType>
+                          </element>
+                        </sequence>
+                      </complexType>
+                    </element>
+                    <element name="functions_list" minOccurs="1" maxOccurs="1">
+                      <annotation>
+                        <documentation>
+                          List of all functions and their configurations.
+                        </documentation>
+                      </annotation>
+                      <complexType>
+                        <sequence>
+                          <element maxOccurs="unbounded" name="function">
+                            <complexType>
+                              <sequence>
+                                <element name="description" type="string" />
+                                <element name="options">
+                                  <annotation>
+                                    <documentation>
+                                      List of function options.
+                                    </documentation>
+                                  </annotation>
+                                  <complexType>
+                                    <all>
+                                      <element name="coreID" type="string" />
+                                      <element name="enableClock" type="boolean" minOccurs="0"/>
+                                      <element name="comments" type="string" minOccurs="0" />
+                                      <element name="prefix" type="string" minOccurs="0" />
+                                      <element name="callFromInitBoot" type="boolean" minOccurs="0" />
+                                    </all>
+                                  </complexType>
+                                </element>
+                                <element name="dependencies" type="tns:dependencies" minOccurs="0" maxOccurs="1"/>
+                                <element name="pins">
+                                  <complexType>
+                                    <sequence>
+                                      <element name="pin" minOccurs="0" maxOccurs="unbounded">
+                                        <annotation>
+                                          <documentation>
+                                            Pin routing settings (peripheral, signal, pin number and pin/signal routing name), including list of pin features.
+                                          </documentation>
+                                        </annotation>
+                                        <complexType>
+                                          <sequence minOccurs="0">
+                                            <element name="pin_features">
+                                              <complexType>
+                                                <sequence>
+                                                  <element maxOccurs="unbounded" name="pin_feature">
+                                                    <complexType>
+                                                      <attribute name="name" type="string" use="required" />
+                                                      <attribute name="value" type="string" use="required" />
+                                                    </complexType>
+                                                  </element>
+                                                </sequence>
+                                              </complexType>
+                                            </element>
+                                          </sequence>
+                                          <attribute name="peripheral" type="string" use="required" />
+                                          <attribute name="signal" type="string" use="required" />
+                                          <attribute name="pin_num" type="string" use="required" />
+                                          <attribute name="pin_signal" type="string" use="required" />
+                                        </complexType>
+                                      </element>
+                                    </sequence>
+                                  </complexType>
+                                </element>
+                              </sequence>
+                              <attribute name="name" type="string" use="required" />
+                            </complexType>
+                          </element>
+                        </sequence>
+                      </complexType>
+                    </element>
+                  </all>
+                  <attribute name="name" type="string" use="required" />
+                  <attribute name="version" type="string" use="required" />
+                  <attribute name="enabled" type="boolean" use="required">
+                    <annotation>
+                      <documentation>Flag whether the tool is enabled. If not enabled, it does not perform any action.</documentation>
+                    </annotation>
+                  </attribute>
+                  <attribute name="update_project_code" type="boolean" default="true">
+                    <annotation>
+                      <documentation>Whether tool updates project code</documentation>
+                    </annotation>
+                  </attribute>
+                </complexType>
+              </element>
+
+              <!-- ####### CLOCKS ####### -->
+              <element name="clocks" minOccurs="0" maxOccurs="1">
+                <complexType>
+                  <all>
+                    <element name="generated_project_files" type="tns:generated_project_files" minOccurs="0" maxOccurs="1" />
+                    <element name="clocks_profile" minOccurs="1" maxOccurs="1">
+                      <complexType>
+                        <sequence>
+                          <element name="processor_version" type="string"></element>
+                        </sequence>
+                      </complexType>
+                    </element>
+                    <element name="clock_configurations" minOccurs="1" maxOccurs="1">
+                      <complexType>
+                        <sequence>
+                          <element name="clock_configuration" minOccurs="0" maxOccurs="unbounded">
+                            <complexType>
+                              <sequence>
+                                <element name="description"></element>
+                                <element name="options"></element>
+                                <element name="dependencies" type="tns:dependencies" minOccurs="0" maxOccurs="1"/>
+                                <element name="clock_sources"></element>
+                                <element name="clock_outputs">
+                                  <complexType>
+                                    <sequence>
+                                      <element name="clock_output" maxOccurs="unbounded">
+                                        <complexType>
+                                          <attribute name="id" type="string"></attribute>
+                                          <attribute name="value" type="string"></attribute>
+                                          <attribute name="locked" type="string"></attribute>
+                                          <attribute name="accuracy" type="string"></attribute>
+                                        </complexType>
+                                      </element>
+                                    </sequence>
+                                  </complexType>
+                                </element>
+                                <element name="clock_settings"></element>
+                                <element name="called_from_default_init" minOccurs="0" maxOccurs="1"></element>
+                              </sequence>
+                              <attribute name="name" type="string"></attribute>
+                              <attribute name="id_prefix"></attribute>
+                              <attribute name="prefix_user_defined"></attribute>
+                            </complexType>
+                          </element>
+                        </sequence>
+                      </complexType>
+                    </element>
+                  </all>
+                  <attribute name="name" type="string"></attribute>
+                  <attribute name="version" type="string"></attribute>
+                  <attribute name="enabled" type="boolean" use="required">
+                    <annotation>
+                      <documentation>Flag whether the tool is enabled. If not enabled, it does not perform any action.</documentation>
+                    </annotation>
+                  </attribute>
+                  <attribute name="update_project_code" type="boolean" default="true">
+                    <annotation>
+                      <documentation>Whether tool updates project code</documentation>
+                    </annotation>
+                  </attribute>
+                </complexType>
+              </element>
+
+              <!-- ####### PERIPHERALS ####### -->
+              <element name="periphs" minOccurs="0" maxOccurs="1">
+                <complexType>
+                  <all>
+                    <element name="generated_project_files" type="tns:generated_project_files" minOccurs="0" maxOccurs="1" />
+                    <element name="dependencies" type="tns:dependencies" minOccurs="0" maxOccurs="1"/>
+                    <element name="peripherals_profile" minOccurs="1" maxOccurs="1">
+                      <complexType>
+                        <sequence>
+                          <element name="processor_version" type="string"></element>
+                          <element name="ignored_component_migration_offer" minOccurs="0" maxOccurs="1">
+                            <complexType>
+                              <sequence>
+                                <element name="component" type="string" minOccurs="1" maxOccurs="unbounded"/>
+                              </sequence>
+                            </complexType>
+                          </element>
+                        </sequence>
+                      </complexType>
+                    </element>
+                    <element name="functional_groups" minOccurs="1" maxOccurs="1">
+                      <complexType>
+                        <sequence>
+                          <element name="functional_group" minOccurs="0" maxOccurs="unbounded">
+                            <complexType>
+                              <sequence>
+                                <element name="description"/>
+                                <element name="options"/>
+                                <element name="dependencies" type="tns:dependencies" minOccurs="0" maxOccurs="1"/>
+                                <element name="instances" minOccurs="0" maxOccurs="1">
+                                  <complexType>
+                                    <sequence>
+                                      <element name="instance" minOccurs="0" maxOccurs="unbounded">
+                                        <complexType>
+                                          <sequence>
+                                            <element name="config_set" type="tns:periphs_settings" minOccurs="0" maxOccurs="unbounded"/>
+                                          </sequence>
+                                          <attribute name="type" type="string" use="required"/>
+                                          <attribute name="name" type="string" use="required"/>
+                                          <attribute name="uuid" type="string" use="optional"/>
+                                          <attribute name="comment" type="string" use="optional"/>
+                                          <attribute name="custom_name_enabled" type="boolean" use="optional"/>
+                                          <attribute name="editing_lock" type="boolean" use="optional"/>
+                                          <attribute name="mode" type="string" use="required"/>
+                                          <attribute name="peripheral" type="string"/>
+                                          <attribute name="enabled" type="boolean" default="true"/>
+                                          <attribute name="type_id" type="string"/>
+                                        </complexType>
+                                      </element>
+                                    </sequence>
+                                  </complexType>
+                                </element>
+                              </sequence>
+                              <attribute name="name" type="string"/>
+                              <attribute name="called_from_default_init" type="string"/>
+                              <attribute name="id_prefix" type="string"/>
+                              <attribute name="core" type="string"/>
+                              <attribute name="uuid" type="string"/>
+                            </complexType>
+                          </element>
+                        </sequence>
+                      </complexType>
+                    </element>
+                    <element name="components" minOccurs="0" maxOccurs="1">
+                      <complexType>
+                        <sequence>
+                          <element name="component" minOccurs="0" maxOccurs="unbounded">
+                            <complexType>
+                              <sequence>
+                                <element name="config_set_global" type="tns:periphs_settings" minOccurs="0" maxOccurs="1"/>
+                              </sequence>
+                              <attribute name="name" type="string"></attribute>
+                              <attribute name="type_id" type="string"></attribute>
+                              <attribute name="uuid" type="string" use="optional"/>
+                            </complexType>
+                          </element>
+                        </sequence>
+                      </complexType>
+                    </element>
+                  </all>
+                  <attribute name="name" type="string"/>
+                  <attribute name="version" type="string"/>
+                  <attribute name="enabled" type="boolean" use="required">
+                    <annotation>
+                      <documentation>Flag whether the tool is enabled. If not enabled, it does not perform any action.</documentation>
+                    </annotation>
+                  </attribute>
+                  <attribute name="update_project_code" type="boolean" default="true">
+                    <annotation>
+                      <documentation>Whether tool updates project code</documentation>
+                    </annotation>
+                  </attribute>
+                </complexType>
+              </element>
+
+              <!-- ####### DCDx ####### -->
+              <element name="dcdx" minOccurs="0" maxOccurs="1">
+                <complexType>
+                  <all>
+                    <element name="generated_project_files" type="tns:generated_project_files" minOccurs="0" />
+                    <element name="dcdx_profile">
+                      <complexType>
+                        <sequence>
+                          <element name="processor_version" type="string" />
+                          <element name="output_format" type="string" minOccurs="0" />
+                        </sequence>
+                      </complexType>
+                    </element>
+                    <element name="dcdx_configurations">
+                      <complexType>
+                        <sequence>
+                          <element name="dcdx_configuration" minOccurs="0" maxOccurs="unbounded">
+                            <complexType>
+                              <sequence>
+                                <element name="description" type="string" />
+                                <element name="options">
+                                  <annotation>
+                                    <documentation>
+                                      List of configuration options.
+                                    </documentation>
+                                  </annotation>
+                                  <!-- currently no options for DCDx -->
+                                </element>
+                                <element name="dependencies" type="tns:dependencies" minOccurs="0"/>
+                                <element name="command_groups">
+                                  <complexType>
+                                    <sequence>
+                                      <element name="command_group" minOccurs="0" maxOccurs="unbounded">
+                                        <complexType>
+                                          <sequence>
+                                            <element name="commands">
+                                              <complexType>
+                                                <sequence>
+                                                  <element name="command" minOccurs="0" maxOccurs="unbounded" >
+                                                    <complexType>
+                                                      <sequence>
+                                                        <element name="registers" minOccurs="0">
+                                                          <complexType>
+                                                            <sequence>
+                                                              <element name="register" minOccurs="0" maxOccurs="unbounded" >
+                                                                <complexType>
+                                                                  <attribute name="address" type="string"/>
+                                                                  <attribute name="value" type="string"/>
+                                                                  <attribute name="advanced" type="boolean"/>
+                                                                </complexType>
+                                                              </element>
+                                                            </sequence>
+                                                          </complexType>
+                                                        </element>
+                                                      </sequence>
+                                                      <attribute name="type" type="string" use="required" />
+                                                      <attribute name="action" type="string"/>
+                                                      <attribute name="address" type="string"/>
+                                                      <attribute name="value" type="string"/>
+                                                      <attribute name="value_width" type="string"/>
+                                                      <attribute name="check_count" type="string"/>
+                                                      <attribute name="comment" type="string"/>
+                                                      <attribute name="index" type="string"/>
+                                                    </complexType>
+                                                  </element>
+                                                </sequence>
+                                              </complexType>
+                                            </element>
+                                          </sequence>
+                                          <attribute name="name" type="string" use="required" />
+                                          <attribute name="enabled" type="boolean"/>
+                                          <attribute name="comment" type="string"/>
+                                          <attribute name="generator" type="string">
+                                            <annotation>
+                      						  <documentation>Name of a tool (pins, clocks, ddr, ...) which generated this group of commands.</documentation>
+                    					    </annotation>
+	                                      </attribute>
+                                        </complexType>
+                                      </element>
+                                    </sequence>
+                                  </complexType>
+                                </element>
+                              </sequence>
+                              <attribute name="name" type="string" use="required" />
+                            </complexType>
+                          </element>
+                        </sequence>
+                      </complexType>
+                    </element>
+                  </all>
+                  <attribute name="name" type="string" use="required" />
+                  <attribute name="version" type="string" use="required" />
+                  <attribute name="enabled" type="boolean" use="required">
+                    <annotation>
+                      <documentation>Flag whether the tool is enabled. If not enabled, it does not perform any action.</documentation>
+                    </annotation>
+                  </attribute>
+                  <attribute name="update_project_code" type="boolean" default="true">
+                    <annotation>
+                      <documentation>Whether tool updates project code</documentation>
+                    </annotation>
+                  </attribute>
+                  <attribute name="isSelfTest" type="boolean">
+                    <annotation>
+                      <documentation>Flag whether the Boot ROM shall execute self-test on Reset.</documentation>
+                    </annotation>
+                  </attribute>
+                </complexType>
+              </element>
+
+              <!-- ####### TEE ####### -->
+              <element name="tee" minOccurs="0" maxOccurs="1">
+                <complexType>
+                  <sequence>
+                    <element name="generated_project_files" type="tns:generated_project_files" minOccurs="0" maxOccurs="1" />
+                    <element name="tee_profile" minOccurs="1" maxOccurs="1">
+                      <complexType>
+                        <sequence>
+                          <element name="processor_version" type="string"></element>
+                          <!-- tee - tool_options -->
+                          <element name="tool_options" minOccurs="0">
+                            <complexType>
+                              <sequence>
+                                <element name="option" minOccurs="0" maxOccurs="unbounded">
+                          		  <complexType>
+                                    <attribute name="id" type="string" use="required">
+                                      <annotation>
+                                        <documentation>ID of the option.</documentation>
+                                      </annotation>
+                                    </attribute>
+                                    <attribute name="value" type="string" use="required">
+                                      <annotation>
+                                        <documentation>Value of the option.</documentation>
+                                      </annotation>
+                                    </attribute>
+                                  </complexType>
+                                </element>
+                              </sequence>
+                            </complexType>
+                          </element> <!-- tee - tool_options -->
+                        </sequence>
+                      </complexType>
+                    </element>
+                    <!-- tee - functional group -->
+                    <element name="functional_group" minOccurs="0" maxOccurs="unbounded">
+                      <complexType>
+                        <sequence>
+                          <element name="description"/>
+                          <element name="options"/>
+                          <choice minOccurs="1" maxOccurs="unbounded">
+                            <group ref="tns:tee_ahb" minOccurs="0" maxOccurs="1"/>
+                            <group ref="tns:tee_ahbsc_rwx" minOccurs="0" maxOccurs="1"/>
+                            <group ref="tns:tee_trdc" minOccurs="0" maxOccurs="1"/>
+                            <group ref="tns:tee_rdc" minOccurs="0" maxOccurs="1"/>
+                            <group ref="tns:tee_root" minOccurs="0" maxOccurs="1"/>
+                          </choice>
+                          <!-- tee - sau -->
+                          <element name="sau" minOccurs="0" maxOccurs="1">
+                            <complexType>
+                              <sequence>
+                                <element name="region" minOccurs="0" maxOccurs="unbounded">
+                                  <complexType>
+                                    <attribute name="index" type="integer" use="required">
+                                      <annotation>
+                                        <documentation>Index of the SAU region.</documentation>
+                                      </annotation>
+                                    </attribute>
+                                    <attribute name="start" type="integer" use="required">
+                                      <annotation>
+                                        <documentation>Start address of the SAU region.</documentation>
+                                      </annotation>
+                                    </attribute>
+                                    <attribute name="size" type="integer" use="required">
+                                      <annotation>
+                                        <documentation>Size of the SAU region.</documentation>
+                                      </annotation>
+                                    </attribute>
+                                    <attribute name="security" type="string" use="required">
+                                      <annotation>
+                                        <documentation>ID of the assigned security state.</documentation>
+                                      </annotation>
+                                    </attribute>
+                                    <attribute name="enabled" type="boolean" use="required">
+                                      <annotation>
+                                        <documentation>Enabled flag of the SAU region.</documentation>
+                                      </annotation>
+                                    </attribute>
+                                  </complexType>
+                                </element> <!-- tee - sau - region -->
+                              </sequence>
+                              <attribute name="enabled" type="boolean" use="required">
+                                <annotation>
+                                  <documentation>Whether SAU enabled.</documentation>
+                                </annotation>
+                              </attribute>
+                              <attribute name="all_non_secure" type="boolean" use="required">
+                                <annotation>
+                                  <documentation>Whether SAU memory regions are non-secure.</documentation>
+                                </annotation>
+                              </attribute>
+                              <attribute name="generate_code_for_disabled_regions" type="boolean" use="required">
+                                <annotation>
+                                  <documentation>Whether code should be generated for disabled SAU regions.</documentation>
+                                </annotation>
+                              </attribute>
+                            </complexType>
+                          </element> <!-- tee - sau -->
+                          <!-- tee - global_options -->
+                          <element name="global_options" minOccurs="0">
+                            <complexType>
+                              <sequence>
+                                <element name="option" minOccurs="0" maxOccurs="unbounded">
+                            		<complexType>
+                                    <attribute name="id" type="string" use="required">
+                                      <annotation>
+                                        <documentation>ID of the option.</documentation>
+                                      </annotation>
+                                    </attribute>
+                                    <attribute name="value" type="string" use="required">
+                                      <annotation>
+                                        <documentation>Value of the option.</documentation>
+                                      </annotation>
+                                    </attribute>
+                                  </complexType>
+                                </element>
+                              </sequence>
+                            </complexType>
+                          </element> <!-- tee - global_options -->
+                          <!-- tee - disabled_global_options_groups -->
+                          <element name="disabled_global_options_groups" minOccurs="0" maxOccurs="1">
+                            <complexType>
+                              <sequence>
+                                <element name="group" minOccurs="0" maxOccurs="unbounded">
+                                  <complexType>
+                                    <attribute name="name" type="string" use="required">
+                                      <annotation>
+                                        <documentation>Name of disabled global options group.</documentation>
+                                      </annotation>
+                                    </attribute>
+                                  </complexType>
+                                </element>
+                              </sequence>
+                            </complexType>
+                          </element> <!-- tee - disabled_global_options_groups -->
+                          <!-- tee - user_memory_regions -->
+                          <element name="user_memory_regions" minOccurs="0">
+                            <complexType>
+                              <sequence>
+                                <element name="user_memory_region" minOccurs="0" maxOccurs="unbounded">
+                                  <complexType>
+                                    <sequence>
+                                      <element name="accesses" minOccurs="0" maxOccurs="unbounded">
+                                        <annotation>
+                                          <documentation>Configuration of accesses for the domains</documentation>
+                                        </annotation>
+                                        <complexType>
+                                          <sequence>
+                                            <element name="domain" minOccurs="0" maxOccurs="unbounded">
+                                              <annotation>
+                                                <documentation>Access configuration for a single domain</documentation>
+                                              </annotation>
+                                              <complexType>
+                                                <attribute name="security" type="string" use="optional">
+                                                  <annotation>
+                                                    <documentation>The selected security for the given domain</documentation>
+                                                  </annotation>
+                                                </attribute>
+                                                <attribute name="template" type="string" use="required">
+                                                  <annotation>
+                                                    <documentation>The selected access template for the given domain</documentation>
+                                                  </annotation>
+                                                </attribute>
+                                              </complexType>
+                                            </element>
+                                          </sequence>
+                                          <attribute name="domain_path" type="string" use="optional">
+                                            <annotation>
+                                              <documentation>Name of the domains on the path (in case of nested sub-domains); empty in case single domains level (TRDC)</documentation>
+                                            </annotation>
+                                          </attribute>
+                                        </complexType>
+                                      </element>
+                                    </sequence>
+                                    <attribute name="id" type="string" use="required">
+                                      <annotation>
+                                        <documentation>ID of the user memory region, can be used for linker ID.</documentation>
+                                      </annotation>
+                                    </attribute>
+                                    <attribute name="start" type="integer" use="required">
+                                      <annotation>
+                                        <documentation>Start address.</documentation>
+                                      </annotation>
+                                    </attribute>
+                                    <attribute name="size" type="integer" use="required">
+                                      <annotation>
+                                        <documentation>Size of the memory region.</documentation>
+                                      </annotation>
+                                    </attribute>
+                                    <attribute name="name" type="string" use="optional">
+                                      <annotation>
+                                        <documentation>Name of the user memory region, if not defined so it is same as ID.</documentation>
+                                      </annotation>
+                                    </attribute>
+                                    <attribute name="description" type="string" use="optional">
+                                      <annotation>
+                                        <documentation>Description of the user memory region.</documentation>
+                                      </annotation>
+                                    </attribute>
+                                    <attribute name="security" type="string" use="optional">
+                                      <annotation>
+                                        <documentation>ID of the assigned security state.</documentation>
+                                      </annotation>
+                                    </attribute>
+                                  </complexType>
+                                </element> <!-- tee - user_memory_regions - user_memory_region -->
+                              </sequence>
+                            </complexType>
+                          </element> <!-- tee - user_memory_regions -->
+                          <!-- tee - mpus -->
+                          <element name="mpus" minOccurs="0" maxOccurs="1">
+                            <complexType>
+                              <sequence>
+                                <element name="mpu" minOccurs="0" maxOccurs="unbounded">
+                                  <complexType>
+                                    <sequence>
+                                      <element name="attributes" minOccurs="0" maxOccurs="1">
+                                        <complexType>
+                                          <sequence>
+                                            <element name="group" minOccurs="0" maxOccurs="unbounded">
+                                              <complexType>
+                                                <sequence>
+                                                  <element name="regions_properties" minOccurs="0" maxOccurs="1">
+                                                    <complexType>
+                                                      <sequence>
+                                                        <element name="region_properties" minOccurs="0" maxOccurs="unbounded">
+                                                          <complexType>
+                                                            <attribute name="id" type="string" use="required">
+                                                              <annotation>
+                                                                <documentation>ID of the cache_level_attributes.</documentation>
+                                                              </annotation>
+                                                            </attribute>
+                                                            <attribute name="cacheable" type="boolean" use="optional">
+                                                              <annotation>
+                                                                <documentation>
+                                                                  Whether memory operation may be cached.
+                                                                </documentation>
+                                                              </annotation>
+                                                            </attribute>
+                                                            <attribute name="write_back" type="boolean" use="optional">
+                                                              <annotation>
+                                                                <documentation>
+                                                                  Whether cache write policy is write-back.
+                                                                </documentation>
+                                                              </annotation>
+                                                            </attribute>
+                                                            <attribute name="read_allocation" type="boolean" use="optional">
+                                                              <annotation>
+                                                                <documentation>
+                                                                  Whether memory caching operation requires read buffer allocation.
+                                                                </documentation>
+                                                              </annotation>
+                                                            </attribute>
+                                                            <attribute name="write_allocation" type="boolean" use="optional">
+                                                              <annotation>
+                                                                <documentation>
+                                                                  Whether memory caching operation requires write buffer allocation.
+                                                                </documentation>
+                                                              </annotation>
+                                                            </attribute>
+                                                            <attribute name="transientness" type="boolean" use="optional">
+                                                              <annotation>
+                                                                <documentation>
+                                                                  Whether memory caching operation is transient.
+                                                                </documentation>
+                                                              </annotation>
+                                                            </attribute>
+                                                          </complexType>
+                                                        </element>
+                                                      </sequence>
+                                                    </complexType>
+                                                  </element>
+                                                </sequence>
+                                                <attribute name="index" type="integer" use="required">
+                                                  <annotation>
+                                                    <documentation>Index of the attributes group.</documentation>
+                                                  </annotation>
+                                                </attribute>
+                                                <attribute name="id" type="string" use="optional">
+                                                  <annotation>
+                                                    <documentation>ID of the attributes group.</documentation>
+                                                  </annotation>
+                                                </attribute>
+                                                <attribute name="memory_type" type="tns:MemoryType" use="required">
+                                                  <annotation>
+                                                    <documentation>Memory type.</documentation>
+                                                  </annotation>
+                                                </attribute>
+                                                <attribute name="device" type="tns:DeviceAttrs" use="optional">
+                                                  <annotation>
+                                                    <documentation>Device attributes.</documentation>
+                                                  </annotation>
+                                                </attribute>
+                                              </complexType>
+                                            </element> <!-- tee - mpu - attributes group -->
+                                          </sequence>
+                                        </complexType>
+                                      </element> <!-- tee - mpu - attributes -->
+                                      <element name="regions" minOccurs="0" maxOccurs="1">
+                                        <complexType>
+                                          <sequence>
+                                            <element name="region" minOccurs="0" maxOccurs="unbounded">
+                                              <complexType>
+                                                <attribute name="index" type="integer" use="required">
+                                                  <annotation>
+                                                    <documentation>Index of the MPU region.</documentation>
+                                                  </annotation>
+                                                </attribute>
+                                                <attribute name="start" type="integer" use="required">
+                                                  <annotation>
+                                                    <documentation>Start address of the MPU region.</documentation>
+                                                  </annotation>
+                                                </attribute>
+                                                <attribute name="size" type="integer" use="required">
+                                                  <annotation>
+                                                    <documentation>Size of the MPU region.</documentation>
+                                                  </annotation>
+                                                </attribute>
+                                                <attribute name="security" type="string" use="required">
+                                                  <annotation>
+                                                    <documentation>ID of the assigned security state.</documentation>
+                                                  </annotation>
+                                                </attribute>
+                                                <attribute name="enabled" type="boolean" use="required">
+                                                  <annotation>
+                                                    <documentation>Enabled flag of the MPU region.</documentation>
+                                                  </annotation>
+                                                </attribute>
+                                                <attribute name="executable" type="boolean" use="required">
+                                                  <annotation>
+                                                    <documentation>Executable flag of the MPU region.</documentation>
+                                                  </annotation>
+                                                </attribute>
+                                                <attribute name="read_only" type="string" use="required">
+                                                  <annotation>
+                                                    <documentation>Read-only flag of the MPU region.</documentation>
+                                                  </annotation>
+                                                </attribute>
+                                                <attribute name="shareability" type="string" use="optional">
+                                                  <annotation>
+                                                    <documentation>Shareability of the MPU region.</documentation>
+                                                  </annotation>
+                                                </attribute>
+                                                <attribute name="srd" type="string" use="optional">
+                                                  <annotation>
+                                                    <documentation>Sub-region disable bits of a region.</documentation>
+                                                  </annotation>
+                                                </attribute>
+                                                <attribute name="attributes_index" type="int" use="required">
+                                                  <annotation>
+                                                    <documentation>Index of the selected memory attributes of the MPU region.</documentation>
+                                                  </annotation>
+                                                </attribute>
+                                              </complexType>
+                                            </element> <!-- tee - mpu - region -->
+                                          </sequence>
+                                        </complexType>
+                                      </element> <!-- tee - mpu - regions -->
+                                    </sequence>
+                                    <!-- tee - mpu - attributes -->
+                                    <attribute name="id" type="string" use="optional">
+                                      <annotation>
+                                        <documentation>ID of the MPU (S/NS/...).</documentation>
+                                      </annotation>
+                                    </attribute>
+                                    <attribute name="enabled" type="boolean" use="required">
+                                      <annotation>
+                                        <documentation>Whether MPU enabled.</documentation>
+                                      </annotation>
+                                    </attribute>
+                                    <attribute name="priv_default_map" type="boolean" use="required">
+                                      <annotation>
+                                        <documentation>Whether MPU uses the dafult privileged memory map for privileged access to the memory areas uncovered by MPU regions.</documentation>
+                                      </annotation>
+                                    </attribute>
+                                    <attribute name="handler_enabled" type="boolean" use="required">
+                                      <annotation>
+                                        <documentation>Whether the MPU operation is enabled during HardFault and NMI handlers.</documentation>
+                                      </annotation>
+                                    </attribute>
+                                    <attribute name="generate_code_for_disabled_regions" type="boolean" use="required">
+                                      <annotation>
+                                        <documentation>Whether code should be generated for disabled MPU regions.</documentation>
+                                      </annotation>
+                                    </attribute>
+                                    <attribute name="masters" type="string" use="optional">
+                                      <annotation>
+                                        <documentation>String representation of the master IDs (separated by space).</documentation>
+                                      </annotation>
+                                    </attribute>
+                                  </complexType>
+                                </element> <!-- tee - mpu -->
+                              </sequence>
+                            </complexType>
+                          </element> <!-- tee - mpus -->
+                          <!-- tee - apus -->
+                          <element name="apus" minOccurs="0" maxOccurs="1">
+                            <complexType>
+                              <sequence>
+                                <element name="apu" minOccurs="0" maxOccurs="unbounded">
+                                  <complexType>
+                                    <sequence>
+                                      <element name="regions" minOccurs="0" maxOccurs="1">
+                                        <complexType>
+                                          <sequence>
+                                            <element name="region" minOccurs="0" maxOccurs="unbounded">
+                                              <complexType>
+                                                <attribute name="index" type="integer" use="required">
+                                                  <annotation>
+                                                    <documentation>Index of the APU region.</documentation>
+                                                  </annotation>
+                                                </attribute>
+                                                <attribute name="start" type="integer" use="required">
+                                                  <annotation>
+                                                    <documentation>Start address of the APU region.</documentation>
+                                                  </annotation>
+                                                </attribute>
+                                                <attribute name="size" type="integer" use="required">
+                                                  <annotation>
+                                                    <documentation>Size of the APU region.</documentation>
+                                                  </annotation>
+                                                </attribute>
+                                                <attribute name="encrypt_enabled" type="boolean" use="required">
+                                                  <annotation>
+                                                    <documentation>Ecryption enabled flag of the APU region.</documentation>
+                                                  </annotation>
+                                                </attribute>
+                                                <attribute name="locked" type="string" use="required">
+                                                  <annotation>
+                                                    <documentation>Locked flag of the APU region.</documentation>
+                                                  </annotation>
+                                                </attribute>
+                                              </complexType>
+                                            </element> <!-- tee - apu - region -->
+                                          </sequence>
+                                        </complexType>
+                                      </element> <!-- tee - apu - regions -->
+                                    </sequence>
+                                    <!-- tee - apu - attributes -->
+                                    <attribute name="id" type="string" use="required">
+                                      <annotation>
+                                        <documentation>ID of the APU (apc/...).</documentation>
+                                      </annotation>
+                                    </attribute>
+                                    <attribute name="enabled" type="boolean" use="required">
+                                      <annotation>
+                                        <documentation>Whether APU is enabled.</documentation>
+                                      </annotation>
+                                    </attribute>
+                                  </complexType>
+                                </element> <!-- tee - apu -->
+                              </sequence>
+                            </complexType>
+                          </element> <!-- tee - apus -->
+                          <group ref="tns:tee_trdc_templates"/><!-- tee - global access templates -->
+                        </sequence>
+                        <attribute name="uuid" type="string" use="optional">
+                          <annotation>
+                            <documentation>UUID of the functional group.</documentation>
+                          </annotation>
+                        </attribute>
+                        <attribute name="called_from_default_init" type="boolean" use="optional">
+                          <annotation>
+                            <documentation>Whether the functional group is called from the default initialisation function.</documentation>
+                          </annotation>
+                        </attribute>
+                        <attribute name="id_prefix" type="string" use="required">
+                          <annotation>
+                            <documentation>Name prefix of the functional group.</documentation>
+                          </annotation>
+                        </attribute>
+                        <attribute name="prefix_user_defined" type="boolean" use="required">
+                          <annotation>
+                            <documentation>Whether the functional group prefix is user-defined.</documentation>
+                          </annotation>
+                        </attribute>
+                        <attribute name="name" type="string" use="optional">
+                          <annotation>
+                            <documentation>Name of the functional group.</documentation>
+                          </annotation>
+                        </attribute>
+                      </complexType>
+                    </element>
+                  </sequence>
+                  <!-- tee attributes -->
+                  <attribute name="name" type="string" use="required" />
+                  <attribute name="version" type="string" use="required" />
+                  <attribute name="enabled" type="boolean" use="required">
+                    <annotation>
+                      <documentation>Flag whether the tool is enabled. If not enabled, it does not perform any action.</documentation>
+                    </annotation>
+                  </attribute>
+                  <attribute name="update_project_code" type="boolean" default="true">
+                    <annotation>
+                      <documentation>Whether tool updates project code</documentation>
+                    </annotation>
+                  </attribute>
+                </complexType>
+              </element> <!-- tee -->
+
+              <!-- ####### DDR ####### -->
+               <element name="ddr" minOccurs="0" maxOccurs="1">
+                <complexType>
+                  <all>
+                    <element name="dependencies" type="tns:dependencies" minOccurs="0" maxOccurs="1"/>
+                    <element name="peripherals_profile" minOccurs="0" maxOccurs="1">
+                      <complexType>
+                        <sequence>
+                          <element name="processor_version" type="string"></element>
+                        </sequence>
+                      </complexType>
+                    </element>
+                    <element name="functional_groups" minOccurs="0" maxOccurs="1">
+                      <complexType>
+                        <sequence>
+                          <element name="functional_group" minOccurs="0" maxOccurs="unbounded">
+                            <complexType>
+                              <sequence>
+                                <element name="description"/>
+                                <element name="options"/>
+                                <element name="dependencies" type="tns:dependencies" minOccurs="0" maxOccurs="1"/>
+                                <element name="instances" minOccurs="0" maxOccurs="1">
+                                  <complexType>
+                                    <sequence>
+                                      <element name="instance" minOccurs="0" maxOccurs="unbounded">
+                                        <complexType>
+                                          <sequence>
+                                            <element name="config_set" type="tns:periphs_settings" minOccurs="0" maxOccurs="unbounded"/>
+                                          </sequence>
+                                          <attribute name="type" type="string" use="required"/>
+                                          <attribute name="name" type="string" use="required"/>
+                                          <attribute name="uuid" type="string" use="optional"/>
+                                          <attribute name="comment" type="string" use="optional"/>
+                                          <attribute name="mode" type="string" use="required"/>
+                                          <attribute name="peripheral" type="string"/>
+                                          <attribute name="enabled" type="boolean" default="true"/>
+                                          <attribute name="type_id" type="string"/>
+                                        </complexType>
+                                      </element>
+                                    </sequence>
+                                  </complexType>
+                                </element>
+                              </sequence>
+                              <attribute name="name" type="string"/>
+                              <attribute name="called_from_default_init" type="string"/>
+                              <attribute name="id_prefix" type="string"/>
+                              <attribute name="core" type="string"/>
+                            </complexType>
+                          </element>
+                        </sequence>
+                      </complexType>
+                    </element>
+                    <element name="components" minOccurs="0" maxOccurs="1">
+                      <complexType>
+                        <sequence>
+                          <element name="component" minOccurs="0" maxOccurs="unbounded">
+                            <complexType>
+                              <sequence>
+                                <element name="config_set_global" type="tns:periphs_settings" minOccurs="0" maxOccurs="1"/>
+                              </sequence>
+                              <attribute name="name" type="string"></attribute>
+                              <attribute name="type_id" type="string"></attribute>
+                            </complexType>
+                          </element>
+                        </sequence>
+                      </complexType>
+                    </element>
+                  </all>
+                  <attribute name="name" type="string"/>
+                  <attribute name="version" type="string"/>
+                  <attribute name="enabled" type="boolean" use="required">
+                    <annotation>
+                      <documentation>Flag whether the tool is enabled. If not enabled, it does not perform any action.</documentation>
+                    </annotation>
+                  </attribute>
+                  <attribute name="update_project_code" type="boolean" default="true">
+                    <annotation>
+                      <documentation>Whether tool updates project code</documentation>
+                    </annotation>
+                  </attribute>
+                </complexType>
+              </element>
+
+			  <!-- ####### IVT ####### -->
+			  <element name="ivt" minOccurs="0" maxOccurs="1">
+				<annotation>
+                  <documentation>IVT tool settings</documentation>
+                </annotation>
+				<complexType>
+					<sequence>
+						<element name="ivt_profile">
+							<complexType>
+								<sequence>
+									<element name="processor_version" type="string"/>
+								</sequence>
+							</complexType>
+						</element>
+						<element name="ivt_records" minOccurs="0" maxOccurs="1">
+							<annotation>
+								<documentation>
+									List of all ivt pointers and their configurations.
+								</documentation>
+							</annotation>
+							<complexType>
+								<sequence>
+									<element name="ivt_pointers">
+										<complexType>
+											<sequence>
+												<element name="ivt_pointer" minOccurs="0" maxOccurs="unbounded">
+													<complexType>
+														<attribute name="id" type="string" use="required" />
+														<attribute name="index" type="string" use="required" />
+														<attribute name="name" type="string" use="required" />
+														<attribute name="size" type="string" use="required" />
+														<attribute name="start_address" type="string" use="required" />
+														<attribute name="file_path" type="string" use="required" />
+														<attribute name="locked" type="boolean" use="required" />
+														<attribute name="reserved" type="string" use="required" />
+														<attribute name="sign_image" type="string" use="required" />
+													</complexType>
+												</element>
+											</sequence>
+										</complexType>
+									</element>
+									<element name="ivt_image" minOccurs="0" maxOccurs="1">
+										<complexType>
+											<attribute name="start_address" type="string" use="required" />
+											<attribute name="locked" type="boolean" use="required" />
+											<attribute name="sign_image" type="boolean" use="required" />
+										</complexType>
+									</element>
+									<element name="automatic_align">
+										<complexType>
+											<attribute name="start_address" type="string" use="required" /> 
+										</complexType>
+									</element>
+									<element name="struct">
+										<complexType>
+											<sequence>
+												<element name="struct" type="tns:struct_boot" minOccurs="0" maxOccurs="unbounded"/>
+											</sequence>
+										</complexType>
+									</element>
+									<element name="ivt_flash" minOccurs="0" maxOccurs="unbounded">
+										<complexType>
+											<attribute name="image_path" type="string" />
+											<attribute name="algorithm_name" type="string" />
+											<attribute name="port" type="string"  />
+										</complexType>
+									</element>
+								</sequence>
+							</complexType>
+						</element>
+					</sequence>
+					<attribute name="name" type="string" use="required" />
+					<attribute name="version" type="string" use="required" />
+					<attribute name="enabled" type="boolean" use="required">
+						<annotation>
+							<documentation>Flag whether the tool is enabled. If not enabled, it does not perform any action.</documentation>
+						</annotation>
+					</attribute>
+					<attribute name="update_project_code" type="boolean" default="true">
+						<annotation>
+							<documentation>Whether tool updates project code</documentation>
+						</annotation>
+					</attribute>
+				</complexType>
+			  </element>
+
+			  <!-- ####### DCD ####### -->
+			  <element name="dcd" minOccurs="0" maxOccurs="1">
+				<complexType>
+					<all>
+						<element name="dcdx_profile">
+							<complexType>
+								<sequence>
+									<element name="processor_version" type="string"/>
+								</sequence>
+							</complexType>
+						</element>
+						<element name="dcdx_configurations">
+							<complexType>
+								<sequence>
+									<element name="dcdx_configuration">
+										<complexType>
+											<sequence>
+												<element name="description"/>
+												<element name="options"/>
+												<element name="command_groups">
+													<complexType>
+														<sequence>
+															<element name="command_group">
+																<complexType>
+																	<sequence>
+																		<element name="commands">
+																			<complexType>
+																				<sequence>
+																					<element name="command" minOccurs="0" maxOccurs="unbounded">
+																						<complexType>
+																							<sequence>
+																								<element name="registers" minOccurs="0" maxOccurs="unbounded">
+																									<complexType>
+																										<sequence>
+																											<element name="register" minOccurs="0" maxOccurs="unbounded">
+																												<complexType>
+																													<attribute name="address" type="string" use="required" />
+																													<attribute name="value" type="string" use="required" />	
+																													<attribute name="advanced" type="boolean" use="required" />
+																													<attribute name="name" type="string" use="required" />
+																												</complexType>
+																											</element>
+																										</sequence>
+																									</complexType>
+																								</element>
+																							</sequence>
+																							<attribute name="type" type="string" use="required" />
+																							<attribute name="action" type="string"/>
+																							<attribute name="value_width" type="string"/>
+																							<attribute name="check_count" type="string"/>
+																						</complexType>
+																					</element>
+																				</sequence>
+																			</complexType>
+																		</element>
+																	</sequence>
+																	<attribute name="name" type="string" use="required" />
+																	<attribute name="enabled" type="boolean" use="required"/>
+																</complexType>
+															</element>
+														</sequence>
+													</complexType>
+												</element>
+											</sequence>
+											<attribute name="name" type="string" use="required"/>
+										</complexType>
+									</element>
+								</sequence>
+							</complexType>
+						</element>
+					</all>
+					<attribute name="name" type="string" use="required" />
+					<attribute name="version" type="string" use="required" />
+					<attribute name="enabled" type="boolean" use="required">
+						<annotation>
+							<documentation>Flag whether the tool is enabled. If not enabled, it does not perform any action.</documentation>
+						</annotation>
+					</attribute>
+					<attribute name="update_project_code" type="boolean" default="true">
+						<annotation>
+							<documentation>Whether tool updates project code</documentation>
+						</annotation>
+					</attribute>
+					<attribute name="isSelfTest" type="boolean">
+						<annotation>
+							<documentation>Flag whether the Boot ROM shall execute self-test on Reset.</documentation>
+						</annotation>
+					</attribute>
+				</complexType>
+			  </element>
+
+			  <!-- ####### QuadSPI ####### -->
+			  <element name="quadspi" minOccurs="0" maxOccurs="1">
+				<complexType>
+					<all>
+						<element name="quadspi_profile">
+							<complexType>
+								<sequence>
+									<element name="processor_version" type="string"/>
+								</sequence>
+							</complexType>
+						</element>
+						<element name="quadspi_records">
+							<complexType>
+								<sequence>
+									<element name="general_settings" minOccurs="0" maxOccurs="1">
+										<complexType>
+											<sequence>
+												<element name="struct" type="tns:struct_boot" minOccurs="0" maxOccurs="unbounded"/>
+											</sequence>
+										</complexType>
+									</element>
+									<element name="quadspi_register" minOccurs="0" maxOccurs="unbounded">
+										<complexType>
+											<attribute name="name" type="string" use="required"/>
+											<attribute name="value" type="string" use="required"/>
+										</complexType>
+									</element>
+									<element name="data_sequences" minOccurs="0" maxOccurs="1">
+										<complexType>
+											<sequence>
+												<element name="struct" minOccurs="0" maxOccurs="unbounded">
+													<complexType>
+														<sequence>
+															<element name="setting" minOccurs="1" maxOccurs="1"/>
+															<element name="arrays" minOccurs="1" maxOccurs="1">
+																	<complexType>
+																		<sequence>
+																			<element name="array" minOccurs="0" maxOccurs="unbounded">
+																				<complexType>
+																					<sequence>
+																						<element name="struct" type="tns:struct_boot" minOccurs="0" maxOccurs="unbounded"/>
+																					</sequence>
+																					<attribute name="name" type="string" use="required" />
+																				</complexType>
+																			</element>
+																		</sequence>
+																	</complexType>
+															</element>
+															<element name="child_structs" minOccurs="1" maxOccurs="1"/>
+														</sequence>
+														<attribute name="name" type="string" use="required"/>
+													</complexType>
+												</element>
+											</sequence>
+										</complexType>
+									</element>
+								</sequence>
+							</complexType>
+						</element>
+					</all>
+					<attribute name="name" type="string" use="required" />
+					<attribute name="version" type="string" use="required" />
+					<attribute name="enabled" type="boolean" use="required">
+						<annotation>
+							<documentation>Flag whether the tool is enabled. If not enabled, it does not perform any action.</documentation>
+						</annotation>
+					</attribute>
+					<attribute name="update_project_code" type="boolean" default="true">
+						<annotation>
+							<documentation>Whether tool updates project code</documentation>
+						</annotation>
+					</attribute>
+					<attribute name="isSelfTest" type="boolean"/>
+				</complexType>
+			  </element>
+
+			<!-- ####### SERDES ####### -->
+             <element name="serdes" minOccurs="0" maxOccurs="1">
+                <complexType>
+                  <all>
+                    <element name="components" minOccurs="0" maxOccurs="1">
+                      <complexType>
+                        <sequence>
+                          <element name="component" minOccurs="0" maxOccurs="unbounded">
+                            <complexType>
+                              <sequence>
+                                <element name="config_set_global" type="tns:periphs_settings" minOccurs="0" maxOccurs="1"/>
+                              </sequence>
+                              <attribute name="name" type="string"></attribute>
+                              <attribute name="type_id" type="string"></attribute>
+                            </complexType>
+                          </element>
+                        </sequence>
+                      </complexType>
+                    </element>
+                  </all>
+                  <attribute name="name" type="string"/>
+                  <attribute name="version" type="string"/>
+                  <attribute name="enabled" type="boolean" use="required">
+                    <annotation>
+                      <documentation>Flag whether the tool is enabled. If not enabled, it does not perform any action.</documentation>
+                    </annotation>
+                  </attribute>
+                  <attribute name="update_project_code" type="boolean" default="true">
+                    <annotation>
+                      <documentation>Whether tool updates project code</documentation>
+                    </annotation>
+                  </attribute>
+                </complexType>
+              </element>
+
+              <!-- ####### PROJECT GENERATOR ####### -->
+              <!-- This section is deprecated; the tool is no more supported since V4 -->
+              <element name="prjgen" minOccurs="0" maxOccurs="1">
+                <annotation>
+                  <documentation>Project Generator settings</documentation>
+                </annotation>
+                <complexType>
+                  <sequence minOccurs="1" maxOccurs="unbounded">
+                    <element name="toolchain" minOccurs="0" maxOccurs="1">
+                      <annotation>
+                        <documentation></documentation>
+                      </annotation>
+                      <complexType>
+                        <attribute name="id" type="string" use="required">
+                          <annotation>
+                            <documentation>ID of the selected toolchain (reference to SDK manifest)</documentation>
+                          </annotation>
+                        </attribute>
+                        <attribute name="type" type="string" use="required">
+                          <annotation>
+                            <documentation>C or C++</documentation>
+                          </annotation>
+                        </attribute>
+                      </complexType>
+                    </element>
+                    <element name="project_config" minOccurs="1" maxOccurs="unbounded">
+                      <annotation>
+                        <documentation>Project configuration (for one core)</documentation>
+                      </annotation>
+                      <complexType>
+                        <sequence minOccurs="1" maxOccurs="unbounded">
+                          <element name="description" minOccurs="0" maxOccurs="1">
+                            <annotation>
+                              <documentation>Description of the project</documentation>
+                            </annotation>
+                          </element>
+                          <element name="options" minOccurs="0" maxOccurs="1">
+                            <annotation>
+                              <documentation>Reserved for PrjGen options, currently not used</documentation>
+                            </annotation>
+                          </element>
+                          <element name="dependencies" minOccurs="0" maxOccurs="1">
+                            <annotation>
+                              <documentation>Not relevant</documentation>
+                            </annotation>
+                          </element>
+                          <element name="component_set" minOccurs="1" maxOccurs="unbounded">
+                            <annotation>
+                              <documentation>Component selection</documentation>
+                            </annotation>
+                            <complexType>
+                              <sequence minOccurs="0" maxOccurs="unbounded">
+                                <element name="component" minOccurs="0" maxOccurs="unbounded">
+                                  <annotation>
+                                    <documentation>Processor independent ID of the component (reference to SDK manifest)</documentation>
+                                  </annotation>
+                                </element>
+                              </sequence>
+                              <attribute name="type" type="string" use="required">
+                                <annotation>
+                                  <documentation>Type of the component set: driver/utility/CMSIS_driver/middleware</documentation>
+                                </annotation>
+                              </attribute>
+                              <attribute name="selection" type="string" use="required">
+                                <annotation>
+                                  <documentation>What components are selected: all/none/custom</documentation>
+                                </annotation>
+                              </attribute>
+                            </complexType>
+                          </element>
+                        </sequence>
+                        <attribute name="name" type="string" use="required">
+                          <annotation>
+                            <documentation>ID of the CORE (reference to tools data or core-name in SDK manifest)</documentation>
+                          </annotation>
+                        </attribute>
+                        <attribute name="rtos" type="string" use="required">
+                          <annotation>
+                            <documentation>processor independent ID of the selected RTOS (reference to SDK manifest); empty string if RTOS is not selected</documentation>
+                          </annotation>
+                        </attribute>
+                      </complexType>
+                    </element>
+                  </sequence>
+                  <attribute name="name" type="string" use="required">
+                    <annotation>
+                      <documentation>Tool name</documentation>
+                    </annotation>
+                  </attribute>
+                  <attribute name="version" type="string" use="required">
+                    <annotation>
+                      <documentation>Tool version</documentation>
+                    </annotation>
+                  </attribute>
+                  <attribute name="enabled" type="boolean" use="required">
+                    <annotation>
+                      <documentation>Flag whether the tool is enabled. If not enabled, it does not perform any action.</documentation>
+                    </annotation>
+                  </attribute>
+                  <attribute name="update_project_code" type="string" use="optional">
+                    <annotation>
+                      <documentation>It is not used</documentation>
+                    </annotation>
+                  </attribute>
+                </complexType>
+              </element>
+
+              <!-- ####### COMMON ####### -->
+              <!-- This section is deprecated: SDK package and core role is no more supported -->
+              <element name="common" minOccurs="0" maxOccurs="1">
+                <annotation>
+                  <documentation>Shared configuration for all tools</documentation>
+                </annotation>
+                <complexType>
+                  <choice maxOccurs="unbounded">
+                    <element name="sdk_package" minOccurs="1" maxOccurs="1">
+                      <annotation>
+                        <documentation>Info about selected SDK</documentation>
+                      </annotation>
+                      <complexType>
+                        <attribute name="version" type="string" use="required">
+                          <annotation>
+                            <documentation>Version of the SDK</documentation>
+                          </annotation>
+                        </attribute>
+                        <attribute name="configuration" type="string" use="required">
+                          <annotation>
+                            <documentation>SDK configuration hash; unique identification of the SDK content</documentation>
+                          </annotation>
+                        </attribute>
+                      </complexType>
+                    </element>
+                    <element name="core" minOccurs="1" maxOccurs="unbounded">
+                      <annotation>
+                        <documentation>Core specific settings</documentation>
+                      </annotation>
+                      <complexType>
+                        <attribute name="name" type="string" use="required">
+                          <annotation>
+                            <documentation>ID of the core from Tools data; or name in SDK manifest</documentation>
+                          </annotation>
+                        </attribute>
+                        <attribute name="role" type="string" use="required">
+                          <annotation>
+                            <documentation>Core boot role</documentation>
+                          </annotation>
+                        </attribute>
+                        <attribute name="project_name" type="string" use="required">
+                          <annotation>
+                            <documentation>Toolchain project name</documentation>
+                          </annotation>
+                        </attribute>
+                      </complexType>
+                    </element>
+                  </choice>
+                  <attribute name="name" type="string" use="required">
+                    <annotation>
+                      <documentation>Name "common"; useless</documentation>
+                    </annotation>
+                  </attribute>
+                  <attribute name="version" type="string" use="required">
+                    <annotation>
+                      <documentation>it is not used</documentation>
+                    </annotation>
+                  </attribute>
+                  <attribute name="enabled" type="boolean" use="required">
+                    <annotation>
+                      <documentation>it is not used</documentation>
+                    </annotation>
+                  </attribute>
+                  <attribute name="update_project_code" type="string" use="optional">
+                    <annotation>
+                      <documentation>It is not used</documentation>
+                    </annotation>
+                  </attribute>
+                </complexType>
+              </element>
+            </all>
+          </complexType>
+        </element>
+      </sequence>
+      <attribute name="name" type="string" use="required" />
+      <attribute name="version" type="string" use="required" />
+      <attribute name="uuid">
+        <simpleType>
+          <restriction base="string">
+            <pattern
+              value="[A-Fa-f0-9]{32}|(\{|\()?[A-Fa-f0-9]{8}-([A-Fa-f0-9]{4}-){3}[A-Fa-f0-9]{12}">
+            </pattern>
+          </restriction>
+        </simpleType>
+      </attribute>
+    </complexType>
+  </element>
+</schema>
