@@ -51,6 +51,8 @@
 *.pdb
 *.dwo
 
+*.metadata/*
+
 # XML debug files
 **/Debug/*.xml
 
