@@ -1,11 +1,11 @@
-15:49:32 **** Incremental Build of configuration Debug for project lpcxpresso55s69_hello_world_s_cm33_core0 ****
+16:37:21 **** Incremental Build of configuration Debug for project lpcxpresso55s69_hello_world_s_cm33_core0 ****
 make -r -j20 all 
 make[1]: Nothing to be done for 'main-build'.
 Performing post-build steps
 arm-none-eabi-size "lpcxpresso55s69_hello_world_s_cm33_core0.axf"; # arm-none-eabi-objcopy -v -O binary "lpcxpresso55s69_hello_world_s_cm33_core0.axf" "lpcxpresso55s69_hello_world_s_cm33_core0.bin" ; # checksum -p LPC55S69 -d "lpcxpresso55s69_hello_world_s_cm33_core0.bin";
    text	   data	    bss	    dec	    hex	filename
-  17756	     12	   4360	  22128	   5670	lpcxpresso55s69_hello_world_s_cm33_core0.axf
+  18012	     12	   4360	  22384	   5770	lpcxpresso55s69_hello_world_s_cm33_core0.axf
  
 
-15:49:33 Build Finished. 0 errors, 0 warnings. (took 426ms)
+16:37:21 Build Finished. 0 errors, 0 warnings. (took 482ms)
 

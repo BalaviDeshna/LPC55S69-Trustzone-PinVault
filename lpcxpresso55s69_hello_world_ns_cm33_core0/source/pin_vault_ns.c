@@ -120,6 +120,7 @@ int main(void) {
 		// lockout
 		if (count == 3) {
 			PRINTF_NSE("TOO MANY INCORRECT ATTEMPTS. LOCKED OUT.\r\n");
+			PRINTF_NSE("Enter admin code to reset.\r\n");
 			while (1) {
 				LED_ON(RED_PIN);
 				LED_OFF(BLUE_PIN);
