@@ -37,6 +37,7 @@ typedef struct {
 
 static Audit_Entry audit_log[MAX_LOG_ENTRIES];
 static int log_count = 0;
+static int attempt_counter = 0;
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
@@ -96,7 +97,6 @@ TZM_IS_NOSECURE_ENTRY void DbgConsole_Putchar_NSE(char ch){
 
 TZM_IS_NOSECURE_ENTRY int verify_pin(const char* entered_pin){
 	static const char secure_pin[] = "0987";
-	static int attempt_counter = 0;
 	int result;
 
 	// locks out on 3 failures
@@ -215,4 +215,15 @@ TZM_IS_NOSECURE_ENTRY int verify_firmware_NSE(const firmware_buffer *image_info,
 	audit_log[log_count % MAX_LOG_ENTRIES].attempt_number = version;
 	log_count++;
 	return 1;
+}
+
+TZM_IS_NOSECURE_ENTRY int admin_reset_NSE(const char *admin_code){
+	static const char admin_pin[] = "qwertyuiop";
+	if(strcmp(admin_code, admin_pin) == 0){
+		attempt_counter = 0;
+		PRINTF("Admin reset: Lockout cleared\r\n");
+		return 1;
+	}
+	PRINTF("Admin reset: Admin code incorrect\r\n");
+	return 0;
 }
