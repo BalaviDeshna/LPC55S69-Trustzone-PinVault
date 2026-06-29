@@ -63,4 +63,6 @@ int get_log_attempt_NSE(int index);
 int verify_firmware_NSE(const firmware_buffer *image_info, const firmware_buffer *signature_info, uint32_t version);
 int admin_reset_NSE(const char *admin_code);
 
+void compute_signature_NSE(const firmware_buffer *image_info);
+
 #endif /* _VENEER_TABLE_H_ */

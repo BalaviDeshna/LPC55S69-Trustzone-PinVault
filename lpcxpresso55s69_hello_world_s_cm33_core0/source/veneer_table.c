@@ -218,12 +218,35 @@ TZM_IS_NOSECURE_ENTRY int verify_firmware_NSE(const firmware_buffer *image_info,
 }
 
 TZM_IS_NOSECURE_ENTRY int admin_reset_NSE(const char *admin_code){
+	// hardcoded admin pin for demo purpose, in production this pin would be device specific
 	static const char admin_pin[] = "qwertyuiop";
+
 	if(strcmp(admin_code, admin_pin) == 0){
 		attempt_counter = 0;
 		PRINTF("Admin reset: Lockout cleared\r\n");
+		audit_log[log_count % MAX_LOG_ENTRIES].event = 3;
+		audit_log[log_count % MAX_LOG_ENTRIES].attempt_number = 0;
+		log_count++;
 		return 1;
 	}
 	PRINTF("Admin reset: Admin code incorrect\r\n");
+	audit_log[log_count % MAX_LOG_ENTRIES].event = -3;
+	audit_log[log_count % MAX_LOG_ENTRIRS].attempt_number = 0;
+	log_count++;
 	return 0;
 }
+// temporary function to collect the image bytes
+//TZM_IS_NOSECURE_ENTRY void compute_signature_NSE(const firmware_buffer *image_info)
+//{
+//    uint8_t sig[FIRMWARE_KEY_LENGTH] = {0};
+//    uint32_t i;
+//    for (i = 0; i < image_info->array_length; i++){
+//        sig[i % FIRMWARE_KEY_LENGTH] ^= image_info->array[i] ^ firmware_key[i % FIRMWARE_KEY_LENGTH];
+//    }
+//    PRINTF("Computed signature: ");
+//    for (i = 0; i < FIRMWARE_KEY_LENGTH; i++){
+//        PRINTF("0x%02X, ", sig[i]);
+//    }
+//    PRINTF("\r\n");
+//}
+

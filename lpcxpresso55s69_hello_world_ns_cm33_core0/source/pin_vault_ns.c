@@ -89,6 +89,8 @@ int main(void) {
 				else if(ev == -1) PRINTF_NSE("LOCKDOWN\r\n");
 				else if(ev == 2) PRINTF_NSE("FIRMWARE ACCEPTED\r\n");
 				else if(ev == -2) PRINTF_NSE("FIRMWARE REJECTED\r\n");
+				else if(ev == 3) PRINTF_NSE("ADMIN RESET SUCCESS\r\n");
+				else if(ev == -3) PRINTF_NSE("ADMIN RESET FAILED\r\n");
 				else PRINTF_NSE("UNKNOWN");
 			}
 			PRINTF_NSE("----------------------\r\n");
@@ -120,27 +122,58 @@ int main(void) {
 		// lockout
 		if (count == 3) {
 			PRINTF_NSE("TOO MANY INCORRECT ATTEMPTS. LOCKED OUT.\r\n");
-			PRINTF_NSE("Enter admin code to reset.\r\n");
+
 			while (1) {
-				LED_ON(RED_PIN);
-				LED_OFF(BLUE_PIN);
-				volatile int d = 5500000;
-				while (d--)
-					;
-				LED_OFF(RED_PIN);
-				LED_ON(BLUE_PIN);
-				d = 5500000;
-				while (d--)
-					;
+				PRINTF_NSE("Enter admin code to reset lockout");
+				char admin_input[16];
+				int k = 0;
+				int c;
+
+				while (k < 15){
+					c = DbgConsole_Getchar_NSE();
+					if (c == '\r' || c == '\n') break;
+					admin_input[k] = (char) c;
+					DbgConsole_Putchar_NSE('o');
+
+					k++;
+				}
+				admin_input[k] = '\0';
+				DbgConsole_Putchar_NSE('\r');
+				DbgConsole_Putchar_NSE('\n');
+
+				if (admin_reset_NSE(admin_input)){
+					PRINTF_NSE("Lockout cleared.\r\n");
+					PRINTF_NSE("Returning to PIN entry . . . . . . \r\n");
+					all_leds_off();
+					count = 0;
+					break;
+				}
+				else {
+					PRINTF_NSE("INCORRECT ADMIN PIN.\r\n");
+					PRINTF_NSE("try again \r\n");
+
+					LED_ON(RED_PIN);
+					volatile int d = 2000000;
+					while (d--)
+						;
+					all_leds_off();
+				}
 			}
+			continue;
 		}
 
 	}
 
 	{
-		uint8_t valid_image[] = {0x01, 0x02, 0x03, 0x04, 0x05};
-		uint8_t tampered_image[] = {0xff, 0x02, 0x03, 0x04, 0x05};
-		uint8_t valid_signature[] = {0x2a, 0x7c, 0x16, 0x12, 0x2d};
+		uint8_t valid_image[] = {0x01, 0x02, 0x03, 0x04, 0x05,
+									0xAE, 0xD2, 0xA6, 0xAB, 0xF7,
+									0x15, 0x88, 0x09, 0xCF, 0x4F, 0x3C};
+		uint8_t tampered_image[] = {0xff, 0x02, 0x03, 0x04, 0x05,
+									0x00, 0x00, 0x00, 0x00, 0x00,
+									0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+		uint8_t valid_signature[] = {0x2A, 0x7C, 0x16, 0x12, 0x2D,
+									0x00, 0x00, 0x00, 0x00, 0x00,
+									0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 		uint8_t wrong_signature[16] = {0x00};
 
 		firmware_buffer valid_image_info;
@@ -164,6 +197,12 @@ int main(void) {
 
 		// test1: verify that the valid image matches with the signature
 		fw = verify_firmware_NSE(&valid_image_info, &valid_signature_info, 2);
+
+		// 0x2A, 0x7C, 0x16, 0x12, 0x2D, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+		//compute_signature_NSE(&valid_image_info);
+
+		// 0x01, 0x02, 0x03, 0x04, 0x05, 0xAE, 0xD2, 0xA6, 0xAB, 0xF7, 0x15, 0x88, 0x09, 0xCF, 0x4F, 0x3C
+		//compute_signature_NSE(&valid_signature_info);
 		PRINTF_NSE(fw == 1? "test1 passed, valid fw accepted\r\n": "test1 failed\r\n");
 		PRINTF_NSE("\r\n");
 

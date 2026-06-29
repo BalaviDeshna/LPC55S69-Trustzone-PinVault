@@ -1,23 +1,11 @@
-16:37:22 **** Incremental Build of configuration Debug for project lpcxpresso55s69_hello_world_ns_cm33_core0 ****
+13:44:38 **** Incremental Build of configuration Debug for project lpcxpresso55s69_hello_world_ns_cm33_core0 ****
 make -r -j20 all 
-Building file: ../source/pin_vault_ns.c
-Invoking: MCU C Compiler
-arm-none-eabi-gcc -std=gnu99 -DMCUXPRESSO_SDK -DCPU_LPC55S69JBD100_cm33_core0 -DSDK_DEBUGCONSOLE=1 -DMCUX_META_BUILD -DLPC55S69_cm33_core0_SERIES -DCPU_LPC55S69JBD100 -DCPU_LPC55S69JBD100_cm33 -DCR_INTEGER_PRINTF -D__MCUXPRESSO -D__USE_CMSIS -DDEBUG -D__NEWLIB__ -I"C:\Deshna\LPC55S69_TrustZone_PinVault\lpcxpresso55s69_hello_world_ns_cm33_core0\source" -I"C:\Deshna\LPC55S69_TrustZone_PinVault\lpcxpresso55s69_hello_world_ns_cm33_core0\drivers" -I"C:\Deshna\LPC55S69_TrustZone_PinVault\lpcxpresso55s69_hello_world_ns_cm33_core0\CMSIS" -I"C:\Deshna\LPC55S69_TrustZone_PinVault\lpcxpresso55s69_hello_world_ns_cm33_core0\CMSIS\m-profile" -I"C:\Deshna\LPC55S69_TrustZone_PinVault\lpcxpresso55s69_hello_world_ns_cm33_core0\device" -I"C:\Deshna\LPC55S69_TrustZone_PinVault\lpcxpresso55s69_hello_world_ns_cm33_core0\device\periph" -I"C:\Deshna\LPC55S69_TrustZone_PinVault\lpcxpresso55s69_hello_world_ns_cm33_core0\utilities" -I"C:\Deshna\LPC55S69_TrustZone_PinVault\lpcxpresso55s69_hello_world_ns_cm33_core0\utilities\str" -I"C:\Deshna\LPC55S69_TrustZone_PinVault\lpcxpresso55s69_hello_world_ns_cm33_core0\utilities\debug_console_lite" -I"C:\Deshna\LPC55S69_TrustZone_PinVault\lpcxpresso55s69_hello_world_ns_cm33_core0\component\uart" -I"C:\Deshna\LPC55S69_TrustZone_PinVault\lpcxpresso55s69_hello_world_ns_cm33_core0\board" -O0 -fno-common -g3 -gdwarf-4 -D __SEMIHOST_HARDFAULT_DISABLE -Wno-unused-variable -Wno-unused-but-set-variable -Wno-return-type -Wno-bool-operation -mcpu=cortex-m33 -c -ffunction-sections -fdata-sections -fno-builtin -imacros "C:\Deshna\LPC55S69_TrustZone_PinVault\lpcxpresso55s69_hello_world_ns_cm33_core0\source\mcux_config.h" -imacros "C:\Deshna\LPC55S69_TrustZone_PinVault\lpcxpresso55s69_hello_world_ns_cm33_core0\source\mcuxsdk_version.h" -fmerge-constants -fmacro-prefix-map="../source/"= -mcpu=cortex-m33 -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -D__NEWLIB__ -fstack-usage -specs=nano.specs -MMD -MP -MF"source/pin_vault_ns.d" -MT"source/pin_vault_ns.o" -MT"source/pin_vault_ns.d" -o "source/pin_vault_ns.o" "../source/pin_vault_ns.c"
-Finished building: ../source/pin_vault_ns.c
- 
-Building target: lpcxpresso55s69_hello_world_ns_cm33_core0.axf
-Invoking: MCU Linker
-arm-none-eabi-gcc -nostdlib --specs=nosys.specs -Xlinker -no-warn-rwx-segments -Xlinker -Map="lpcxpresso55s69_hello_world_ns_cm33_core0.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -Xlinker --sort-section=alignment -Xlinker --cref -mcpu=cortex-m33 -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -T lpcxpresso55s69_hello_world_ns_cm33_core0_Debug.ld -o "lpcxpresso55s69_hello_world_ns_cm33_core0.axf" ./utilities/str/fsl_str.o  ./utilities/debug_console_lite/fsl_debug_console.o  ./utilities/fsl_assert.o ./utilities/fsl_memcpy.o  ./startup/boot_multicore_slave.o ./startup/startup_lpc55s69_cm33_core0.o  ./source/pin_vault_ns.o ./source/semihost_hardfault.o  ./drivers/fsl_clock.o ./drivers/fsl_common.o ./drivers/fsl_common_arm.o ./drivers/fsl_flexcomm.o ./drivers/fsl_gpio.o ./drivers/fsl_i2c.o ./drivers/fsl_power.o ./drivers/fsl_reset.o ./drivers/fsl_spi.o ./drivers/fsl_usart.o  ./device/system_LPC55S69_cm33_core0.o  ./component/uart/fsl_adapter_usart.o  ./board/board.o ./board/clock_config.o ./board/hardware_init.o ./board/pin_mux.o    "C:\Deshna\LPC55S69_TrustZone_PinVault\lpcxpresso55s69_hello_world_s_cm33_core0\Debug\lpcxpresso55s69_hello_world_s_cm33_core0_CMSE_lib.o"
-Memory region         Used Size  Region Size  %age Used
-   PROGRAM_FLASH:        5876 B       392 KB      1.46%
-            Ram0:        8284 B       164 KB      4.93%
-Finished building target: lpcxpresso55s69_hello_world_ns_cm33_core0.axf
- 
+make[1]: Nothing to be done for 'main-build'.
 Performing post-build steps
 arm-none-eabi-size "lpcxpresso55s69_hello_world_ns_cm33_core0.axf"; # arm-none-eabi-objcopy -v -O binary "lpcxpresso55s69_hello_world_ns_cm33_core0.axf" "lpcxpresso55s69_hello_world_ns_cm33_core0.bin" ; # checksum -p LPC55S69 -d "lpcxpresso55s69_hello_world_ns_cm33_core0.bin";
    text	   data	    bss	    dec	    hex	filename
-   5876	      0	   8284	  14160	   3750	lpcxpresso55s69_hello_world_ns_cm33_core0.axf
+   6244	      0	   8284	  14528	   38c0	lpcxpresso55s69_hello_world_ns_cm33_core0.axf
  
 
-16:37:23 Build Finished. 0 errors, 0 warnings. (took 1s.388ms)
+13:44:39 Build Finished. 0 errors, 0 warnings. (took 479ms)
 
