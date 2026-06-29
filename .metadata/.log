@@ -6273,3 +6273,24 @@ Caused by: java.net.SocketException: Connection reset
 
 !ENTRY com.nxp.mcuxpresso.core.debug.support.linkserver 1 0 2026-06-29 14:07:05.113
 !MESSAGE RedlinkServer telnet session connected on port 3025->60660 @ 127.0.0.1
+
+!ENTRY com.crt.log 1 0 2026-06-29 16:26:02.791
+!MESSAGE Trying to connect to redlink server on port 3025.
+
+!ENTRY com.nxp.mcuxpresso.core.debug.support.linkserver 1 0 2026-06-29 16:26:03.817
+!MESSAGE RedlinkServer telnet session connected on port 3025->62877 @ 127.0.0.1
+
+!ENTRY [ERROR] [com.nxp.mcuxpresso.core.debug.support.linkserver] 0 0 2026-06-29 16:26:07.644
+!MESSAGE 0x11CEE325, CLI error: #0x11CEE325 (report to NXP)
+
+!ENTRY com.crt.log 1 0 2026-06-29 16:26:31.627
+!MESSAGE Trying to connect to redlink server on port 3025.
+
+!ENTRY com.nxp.mcuxpresso.core.debug.support.linkserver 1 0 2026-06-29 16:26:31.638
+!MESSAGE RedlinkServer telnet session connected on port 3025->62880 @ 127.0.0.1
+
+!ENTRY com.crt.log 1 0 2026-06-29 16:26:32.457
+!MESSAGE Starting GDB server [ C:/nxp/LinkServer_24.12.21/binaries/crt_emu_cm_redlink, --server, :10989, -msg-port=62881, -g, -mi, -2, -pLPC55S69, -vendor=NXP, --bootromstall, 0x50000040, --reset=, -ProbeHandle=1, -CoreIndex=0, -cache=disable, --flash-hashing, --flash-driver=, -x, C:/Deshna/LPC55S69_TrustZone_PinVault/lpcxpresso55s69_hello_world_s_cm33_core0/Debug, --flash-dir, C:/nxp/LinkServer_24.12.21/binaries/Flash, --flash-dir, C:/Deshna/LPC55S69_TrustZone_PinVault/.mcuxpressoide_packages_support/LPC55S69_support/Flash, --telnet, 3330 ]
+
+!ENTRY com.nxp.mcuxpresso.core.debug 1 0 2026-06-29 16:26:35.199
+!MESSAGE Telnet session connected on port 3330->62894 @ 127.0.0.1

@@ -170,6 +170,9 @@ TZM_IS_NOSECURE_ENTRY int verify_firmware_NSE(const firmware_buffer *image_info,
 	}
 	if (version < current_firmware_version){
 		PRINTF("FIRMWARE VERSION TOO OLD.\r\n");
+		audit_log[log_count % MAX_LOG_ENTRIES].event = -2;
+		audit_log[log_count % MAX_LOG_ENTRIES].attempt_number = version;
+		log_count++;
 		return -2;
 	}
 
@@ -231,7 +234,7 @@ TZM_IS_NOSECURE_ENTRY int admin_reset_NSE(const char *admin_code){
 	}
 	PRINTF("Admin reset: Admin code incorrect\r\n");
 	audit_log[log_count % MAX_LOG_ENTRIES].event = -3;
-	audit_log[log_count % MAX_LOG_ENTRIRS].attempt_number = 0;
+	audit_log[log_count % MAX_LOG_ENTRIES].attempt_number = 0;
 	log_count++;
 	return 0;
 }
