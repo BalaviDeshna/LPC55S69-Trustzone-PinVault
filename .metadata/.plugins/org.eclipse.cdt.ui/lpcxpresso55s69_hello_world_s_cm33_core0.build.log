@@ -1,4 +1,4 @@
-16:26:06 **** Incremental Build of configuration Debug for project lpcxpresso55s69_hello_world_s_cm33_core0 ****
+10:01:22 **** Incremental Build of configuration Debug for project lpcxpresso55s69_hello_world_s_cm33_core0 ****
 make -r -j20 all 
 make[1]: Nothing to be done for 'main-build'.
 Performing post-build steps
@@ -7,5 +7,5 @@ arm-none-eabi-size "lpcxpresso55s69_hello_world_s_cm33_core0.axf"; # arm-none-ea
   18268	     12	   4360	  22640	   5870	lpcxpresso55s69_hello_world_s_cm33_core0.axf
  
 
-16:26:06 Build Finished. 0 errors, 0 warnings. (took 481ms)
+10:01:22 Build Finished. 0 errors, 0 warnings. (took 338ms)
 

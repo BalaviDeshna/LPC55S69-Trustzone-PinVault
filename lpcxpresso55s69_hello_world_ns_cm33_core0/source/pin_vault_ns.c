@@ -74,27 +74,7 @@ int main(void) {
 		 */
 		result = verify_pin(entered_pin); // 1: success, 0: failure, -1: lockout
 
-		/*
-		 * audit log information
-		 */
-		{
-			int j;
-			int total = get_log_count_NSE();
-			PRINTF_NSE("-----------\r\nAUDIT LOG START\r\n-----------\r\n");
-			for(j = 0; j<total && j<20; j++){
-				int ev = get_log_event_NSE(j);
-				int at = get_log_attempt_NSE(j);
-				if (ev == 1) PRINTF_NSE("GRANTED\r\n");
-				else if(ev == 0) PRINTF_NSE("DENIED\r\n");
-				else if(ev == -1) PRINTF_NSE("LOCKDOWN\r\n");
-				else if(ev == 2) PRINTF_NSE("FIRMWARE ACCEPTED\r\n");
-				else if(ev == -2) PRINTF_NSE("FIRMWARE REJECTED\r\n");
-				else if(ev == 3) PRINTF_NSE("ADMIN RESET SUCCESS\r\n");
-				else if(ev == -3) PRINTF_NSE("ADMIN RESET FAILED\r\n");
-				else PRINTF_NSE("UNKNOWN");
-			}
-			PRINTF_NSE("----------------------\r\n");
-		}
+		//
 
 		// correct pin
 		if (result == 1) {
@@ -193,7 +173,9 @@ int main(void) {
 
 		int fw;
 
-		PRINTF_NSE("-----------\r\nFIRMWARE VERIFICATION DEMO\r\n-----------\r\n");
+		PRINTF_NSE("\r\n--------------------------"
+				   "\r\nFIRMWARE VERIFICATION DEMO"
+				   "\r\n--------------------------\r\n");
 
 		// test1: verify that the valid image matches with the signature
 		fw = verify_firmware_NSE(&valid_image_info, &valid_signature_info, 2);
@@ -221,8 +203,31 @@ int main(void) {
 		PRINTF_NSE(fw == -3? "test4 passed, wrong signature rejected\r\n": "test4 failed\r\n");
 		PRINTF_NSE("\r\n");
 
-		PRINTF_NSE("----------------------\r\n");
-
 	}
+
+	/*
+			 * audit log information
+			 */
+			{
+				int j;
+				int total = get_log_count_NSE();
+				PRINTF_NSE("\r\n--------------------------"
+						   "\r\n     AUDIT LOG START"
+						   "\r\n--------------------------\r\n");
+				for(j = 0; j<total && j<20; j++){
+					int ev = get_log_event_NSE(j);
+					int at = get_log_attempt_NSE(j);
+					if (ev == 1) PRINTF_NSE("ACCESSS GRANTED\r\n");
+					else if(ev == 0) PRINTF_NSE("ACCESS DENIED\r\n");
+					else if(ev == -1) PRINTF_NSE("LOCKDOWN\r\n");
+					else if(ev == 2) PRINTF_NSE("FIRMWARE ACCEPTED\r\n");
+					else if(ev == -2) PRINTF_NSE("FIRMWARE REJECTED\r\n");
+					else if(ev == 3) PRINTF_NSE("ADMIN RESET SUCCESS\r\n");
+					else if(ev == -3) PRINTF_NSE("ADMIN RESET FAILED\r\n");
+					else PRINTF_NSE("UNKNOWN");
+				}
+				PRINTF_NSE("--------------------------\r\n");
+			}
+
 }
 
